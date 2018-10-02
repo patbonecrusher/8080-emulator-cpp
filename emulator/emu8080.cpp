@@ -6,11 +6,16 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+#include <cstddef>
+#include <cstring>
 #include <fstream>
 #include <string>
 #include <vector>
 #include <iostream>
 #include <iomanip>
+
+#include "cpu_state.hpp"
+#include "cpu.hpp"
 
 using namespace std;
 using std::cout;
@@ -18,34 +23,11 @@ using std::endl;
 using std::hex;
 using std::setfill;
 using std::setw;
+using std::byte;
 
 typedef vector<byte> bin_array;
-typedef vector<byte>::iterator bin_array_it;
-typedef vector<byte>::const_iterator bin_array_const_it;
-
-typedef struct ConditionCodes {    
-uint8_t    z:1;    
-uint8_t    s:1;    
-uint8_t    p:1;    
-uint8_t    cy:1;    
-uint8_t    ac:1;    
-uint8_t    pad:3;    
-} ConditionCodes;
-
-typedef struct State8080 {    
-uint8_t    a;    
-uint8_t    b;    
-uint8_t    c;    
-uint8_t    d;    
-uint8_t    e;    
-uint8_t    h;    
-uint8_t    l;    
-uint16_t    sp;    
-uint16_t    pc;    
-uint8_t     *memory;    
-struct      ConditionCodes      cc;    
-uint8_t     int_enable;    
-} State8080;
+typedef bin_array::iterator bin_array_it;
+typedef bin_array::const_iterator bin_array_const_it;
 
 int Disassemble8080Op(unsigned char *codebuffer, int pc)
 {
@@ -54,10 +36,10 @@ int Disassemble8080Op(unsigned char *codebuffer, int pc)
 	printf("%04x ", pc);
 	switch (*code)
 	{
-		case 0x00: printf("NOP"); break;
+		case 0x00: printf("NOP         "); break;
 		case 0x01: printf("LXI    B,#$%02x%02x", code[2], code[1]); opbytes=3; break;
-		case 0x02: printf("STAX   B"); break;
-		case 0x03: printf("INX    B"); break;
+		case 0x02: printf("STAX   B    "); break;
+		case 0x03: printf("INX    B    "); break;
 		case 0x04: printf("INR    B"); break;
 		case 0x05: printf("DCR    B"); break;
 		case 0x06: printf("MVI    B,#$%02x", code[1]); opbytes=2; break;
@@ -330,6 +312,27 @@ int Disassemble8080Op(unsigned char *codebuffer, int pc)
 	return opbytes;
 }
 
+typedef struct condition_codes {    
+    uint8_t    z:1;    
+    uint8_t    s:1;    
+    uint8_t    p:1;    
+    uint8_t    cy:1;    
+    uint8_t    ac:1;    
+    uint8_t    pad:3;
+} condition_codes_tt;
+
+typedef struct cpu_state {
+    // our registers
+    uint8_t a, b, c, d, e, h, l;
+
+    uint16_t sp;            // stack pointer
+    uint16_t pc;            // program counter
+    bool     int_enable;    // irq handling flag
+
+    condition_codes_tt cc;
+    uint8_t           *memory;
+} State8080;
+
 
 void unimplementedInstruction(State8080* state)    
 {    
@@ -338,6 +341,7 @@ void unimplementedInstruction(State8080* state)
 	state->pc--;
 	Disassemble8080Op(state->memory, state->pc);
 	printf("\n");
+  delete state;
   exit(1);    
 }
 
@@ -751,6 +755,23 @@ void ReadFileIntoMemoryAt(State8080* state, char* filename, uint32_t offset)
 	fclose(f);
 }
 
+void ReadFileIntoBufferAt(uint8_t* memory, char* filename, uint32_t offset)
+{
+	FILE *f= fopen(filename, "rb");
+	if (f==NULL)
+	{
+		printf("error: Couldn't open %s\n", filename);
+		exit(1);
+	}
+	fseek(f, 0L, SEEK_END);
+	int fsize = ftell(f);
+	fseek(f, 0L, SEEK_SET);
+	
+	uint8_t *buffer = &memory[offset];
+	fread(buffer, fsize, 1, f);
+	fclose(f);
+}
+
 State8080* Init8080(void)
 {
 	State8080* state = new State8080();
@@ -764,8 +785,17 @@ int main (int argc, char**argv) {
   // std::cout << "File content size is: " << fileContent.size() << std::endl;
   // dissassemble8080Blob(fileContent);
 
-	int done = 0;
   auto fileName = argv[1];
+	int done = 0;
+
+  auto core = cpu();
+  core.load_instruction_set();
+  ReadFileIntoBufferAt(core.memory, fileName, 0);
+	while (done == 0)
+	{
+    core.step();
+  }
+
 	auto state = Init8080();
 
 	ReadFileIntoMemoryAt(state, fileName, 0);
@@ -774,6 +804,8 @@ int main (int argc, char**argv) {
 	{
 		done = emulate8080Op(state);
 	}
+
+  delete state;
 
   return 0;
 }
