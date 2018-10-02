@@ -21,7 +21,7 @@ void cpu::step() {
     cpu_state.pc++;
 
     this->instructions[opcode].dissassemble(&memory[cpu_state.pc+1], cpu_state.pc);
-    cout << cpu_state << endl;
+    cout << " " << cpu_state << endl;
 
     this->instructions[opcode].execute_fn(&memory[cpu_state.pc+1], cpu_state);
 }
@@ -51,5 +51,5 @@ void cpu::load_instruction_set() {
     }
     this->instructions[0x00] = instruction(0x00, nop0, "NOP", 0);
     this->instructions[0x01] = instruction(0x01, nop0, "LXI    B,#$", 2);
-    this->instructions[0xc3] = instruction(0xc3, jmp , "JMP    $", 2);
+    this->instructions[0xc3] = instruction(0xc3, jmp , "JMP       $", 2);
 }

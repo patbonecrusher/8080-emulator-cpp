@@ -26,17 +26,19 @@ _instruction::_instruction(_instruction const& copy) {
 uint8_t _instruction::dissassemble(uint8_t *data, uint16_t pc) {
     cout << hex << setw(4) << setfill('0') << std::right << pc << " ";
     cout << hex << setw(4) << setfill('0') << std::right << (int) id << " ";
-    cout << setw(10) << setfill(' ') << std::left << name;
+    cout << setw(11) << setfill(' ') << std::left << name;
 
     if (op_size == 2) {
         auto b2 = data[1];
         auto b1 = data[0];
         cout << hex << setfill('0');
-        cout  << setw(2) << (int) b2  << setw(2) << (int) b1;
+        cout  << setw(2) << (int) b2 << setw(2) << (int) b1;
     } else if (op_size == 1) {
         auto b1 = data[0];
         cout << hex << setfill('0');
-        cout  << setw(2) << (int) b1;
+        cout  << setw(2) << (int) b1 << setw(2) << " ";
+    } else if (op_size == 0) {
+        cout  << setw(4) << setfill(' ') << " ";
     }
     return op_size;
 }
