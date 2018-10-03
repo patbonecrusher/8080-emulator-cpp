@@ -12,3 +12,4 @@ http://www.classicgaming.cc/classics/space-invaders/technical-info
 
 http://samples.mameworld.info/
 https://bluishcoder.co.nz/js8080/
+http://pastraiser.com/cpu/i8080/i8080_opcodes.html
