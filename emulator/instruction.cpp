@@ -31,11 +31,11 @@ uint8_t _instruction::dissassemble(uint8_t *data, uint16_t pc) {
     if (op_size == 2) {
         auto b2 = data[1];
         auto b1 = data[0];
-        cout << hex << setfill('0');
+        cout << hex << setfill('0') << std::right;
         cout  << setw(2) << (int) b2 << setw(2) << (int) b1;
     } else if (op_size == 1) {
         auto b1 = data[0];
-        cout << hex << setfill('0');
+        cout << hex << setfill('0') << std::right;
         cout  << setw(2) << (int) b1 << setw(2) << " ";
     } else if (op_size == 0) {
         cout  << setw(4) << setfill(' ') << " ";

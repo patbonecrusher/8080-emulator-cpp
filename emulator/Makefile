@@ -17,12 +17,14 @@ CC        = g++
 $(APP): $(OBJ)
 	$(CC) -o $@ $^
 
-
 all: $(APP) $(OBJ)
 	@echo "hello"
 
 test: $(APP)
 	./$(APP) ../roms/space-invaders/invaders
+
+diag: $(APP)
+	./$(APP) ../roms/cpudiag.bin
 
 clean:
 	rm -rf *.o *.so.* *.a *.la $(APP)
