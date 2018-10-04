@@ -13,7 +13,7 @@
 * 8 bits arithmetic/logical
 * 16 bits arithmetics/logical
 
-20MHZ = 2,000,000 clock cycles per second
+2MHZ = 2,000,000 clock cycles per second
 
 
 
@@ -29,3 +29,10 @@ Auxiliary carry (AC or H), used for binary-coded decimal arithmetic (BCD).
 The carry bit can be set or complemented by specific instructions. Conditional-branch instructions test the various flag status bits. The flags can be copied as a group to the accumulator. The A accumulator and the flags together are called the PSW register, or program status word.`
 
 
+The CPU step method executes the next instruction and return the number of cycles spent
+Allowing the CPU to wait some.
+
+There is a way to figure out the clock cycle of a computer and from that, adjust the game speed.  We can run the cpu in slow mode using thread affinity, which differs from os.
+
+We know the CPU is 2MGZ, 2M clock cycles per second
+We know how many clock cycles were interpreted
