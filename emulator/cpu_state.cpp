@@ -25,7 +25,8 @@ ostream& operator<<(ostream& os, const _condition_codes& cc) {
     return os;
 }
 
-_cpu_state::_cpu_state() {
+_cpu_state::_cpu_state(uint8_t  *memory) 
+    : memory(memory){
     a = 0;
     b = 0;
     c = 0;
@@ -36,13 +37,46 @@ _cpu_state::_cpu_state() {
     sp = 0;
     pc = 0;
     int_enable = false;
-      cout << (a == 0 ? "YES" : "NO") << endl;
-
 }
 
 _cpu_state::~_cpu_state() {
     cout << "here" << endl;
 }
+
+static int parity(int x, int size) {
+	int i;
+	int p = 0;
+	x = (x & ((1<<size)-1));
+	for (i=0; i<size; i++) {
+		if (x & 0x1) p++;
+		x = x >> 1;
+	}
+	return (0 == (p & 0x1));
+}
+
+void _cpu_state::logic_flags_a(uint16_t value) {
+    a = value;
+	cc.cy = cc.ac = 0;
+	cc.z = (a == 0);
+	cc.s = (0x80 == (a & 0x80));
+	cc.p = parity(a, 8);
+}
+
+void _cpu_state::write_mem(uint16_t address, uint8_t value) {
+    if (address < 0x2000)
+    {
+        printf("Writing ROM not allowed %x\n", address);
+        return;
+    }
+    if (address >=0x4000)
+    {
+        printf("Writing out of Space Invaders RAM not allowed %x\n", address);
+        return;
+    }
+    
+    memory[address] = value;
+}
+
 
 ostream& operator<<(ostream& os, const _cpu_state& cs) {
     os  << cs.cc;

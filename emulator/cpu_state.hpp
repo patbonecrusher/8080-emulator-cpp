@@ -19,7 +19,7 @@ typedef struct _condition_codes {
 } condition_codes_t;
 
 typedef struct _cpu_state {
-    _cpu_state ();
+    _cpu_state (uint8_t  *memory);
     ~_cpu_state ();
 
     // our registers
@@ -31,5 +31,9 @@ typedef struct _cpu_state {
 
     condition_codes_t cc;
 
+    uint8_t  *memory;  // Might want to use a std::ptr
+
+    void logic_flags_a(uint16_t value);
+    void write_mem(uint16_t address, uint8_t value);
     friend ostream& operator<<(ostream& os, const _cpu_state& cs);
 } cpu_state_t;
