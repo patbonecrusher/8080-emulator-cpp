@@ -98,7 +98,7 @@ void cpu::load_instruction_set() {
     // +++++++ Jump/Call instructions
     ADD_INS(0xc0, "RNZ"     , 11, 1, _c0_rnz);
     ADD_INS(0xc2, "JNZ"     , 10, 3, _c2_jnz_a16);
-    ADD_INS(0xc3, "JMP"     , 11, 3, _c3_jmp_a16);
+    ADD_INS(0xc3, "JMP"     , 10, 3, _c3_jmp_a16);
     ADD_INS(0xc4, "CNZ"     , 17, 3, _c4_cnz_a16);
     ADD_INS(0xc7, "RST_0"   , 11, 1, _c7_rst_0);
     ADD_INS(0xc8, "RZ"      , 11, 1, _c8_rz);
@@ -144,14 +144,21 @@ void cpu::load_instruction_set() {
     // +++++++ Jump/Calls instructions
 
     // +++++++ START: 8 bits load/store instructions
-    ADD_INS(0x06, "MVI_B_D8", 7, 2, _06_mvi_b_d8);
+    ADD_INS(0x06, "LD B"        , 7 , 2, _06_mvi_b_d8);
+    ADD_INS(0x1a, "LD A,(DE)"   , 7 , 1, _1a_ldax_d_d8);
+    ADD_INS(0x23, "INC HL"      , 5, 1, _23_inx_h_d8);
+    ADD_INS(0x77, "LD (HL),A"   , 7 , 1);
     // +++++++ END: 16 bits load/store instructions
 
     // +++++++ START: 16 bits load/store instructions
-    ADD_INS(0x11, "LXI_D_D16", 10, 3, _11_lxi_d_d16);
-    ADD_INS(0x21, "LXI_H_D16", 10, 3, _21_lxi_h_d16);
-    ADD_INS(0x31, "LXI_SP_D16", 10, 3, _31_lxi_sp_d16);
+    ADD_INS(0x11, "LD DE", 10, 3, _11_lxi_d_d16);
+    ADD_INS(0x21, "LD HL", 10, 3, _21_lxi_h_d16);
+    ADD_INS(0x31, "LD SP", 10, 3, _31_lxi_sp_d16);
     // +++++++ END: 16 bits load/store instructions
+
+    // +++++++ START: 16 bits arithmetic/logical instructions
+    ADD_INS(0x13, "INC DE", 5, 1, _11_lxi_d_d16);
+    // +++++++ END: 16 bits arithmetic/logical instructions
 
     // this->instructions[0x01] = instruction(0x01, nop0, "LXI    B,#$", 2);
     // this->instructions[0xc3] = instruction(0xc3, jmp , "JMP       $", 2);

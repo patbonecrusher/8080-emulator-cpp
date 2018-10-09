@@ -37,6 +37,7 @@ _cpu_state::_cpu_state(uint8_t  *memory)
     sp = 0;
     pc = 0;
     int_enable = false;
+    cycles = 0;
 }
 
 _cpu_state::~_cpu_state() {
@@ -80,13 +81,15 @@ void _cpu_state::write_mem(uint16_t address, uint8_t value) {
 
 ostream& operator<<(ostream& os, const _cpu_state& cs) {
     os  << cs.cc;
-    os  << " A $" << hex << setw(2) << setfill('0') << (int) cs.a
-        << " B $" << hex << setw(2) << setfill('0') << (int) cs.b
-        << " C $" << hex << setw(2) << setfill('0') << (int) cs.c
-        << " D $" << hex << setw(2) << setfill('0') << (int) cs.d
-        << " E $" << hex << setw(2) << setfill('0') << (int) cs.e
-        << " L $" << hex << setw(2) << setfill('0') << (int) cs.l
-        << " SP " << hex << setfill('0') << setw(4) << (int) cs.sp;
+    os  << " A $" << hex << setw(2) << setfill('0') << right << (int) cs.a
+        << " B $" << hex << setw(2) << setfill('0') << right << (int) cs.b
+        << " C $" << hex << setw(2) << setfill('0') << right << (int) cs.c
+        << " D $" << hex << setw(2) << setfill('0') << right << (int) cs.d
+        << " E $" << hex << setw(2) << setfill('0') << right << (int) cs.e
+        << " H $" << hex << setw(2) << setfill('0') << right << (int) cs.h
+        << " L $" << hex << setw(2) << setfill('0') << right << (int) cs.l
+        << " SP " << hex << setfill('0') << setw(4) << right << (int) cs.sp
+        << " CYCLES " << dec << setfill('0') << setw(8) << right << (int) cs.cycles;
     return os;
 }
 

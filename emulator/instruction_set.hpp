@@ -53,6 +53,9 @@ void _ff_rst_7(uint8_t * opcode, cpu_state_t& state);
 
 // +++++++ START: 8 bits load/store instructions
 void _06_mvi_b_d8(uint8_t * opcode, cpu_state_t& state);
+void _1a_ldax_d_d8(uint8_t * opcode, cpu_state_t& state);
+void _23_inx_h_d8(uint8_t * opcode, cpu_state_t& state);
+void _77_mov_m_a_d8(int8_t * opcode, cpu_state_t& state);
 // +++++++ END: 16 bits load/store instructions
 
 // +++++++ START: 16 bits load/store instructions
@@ -60,3 +63,7 @@ void _11_lxi_d_d16(uint8_t * opcode, cpu_state_t& state);
 void _21_lxi_h_d16(uint8_t * opcode, cpu_state_t& state);
 void _31_lxi_sp_d16(uint8_t * opcode, cpu_state_t& state);
 // +++++++ END: 16 bits load/store instructions
+
+// +++++++ START: 16 bits arithmetic/logical instructions
+void _13_inx_d_d16(uint8_t * opcode, cpu_state_t& state);
+// +++++++ END: 16 bits arithmetic/logical instructions

@@ -33,6 +33,8 @@ typedef struct _cpu_state {
 
     uint8_t  *memory;  // Might want to use a std::ptr
 
+    uint32_t cycles;
+
     void logic_flags_a(uint16_t value);
     void write_mem(uint16_t address, uint8_t value);
     friend ostream& operator<<(ostream& os, const _cpu_state& cs);

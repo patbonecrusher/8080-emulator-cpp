@@ -39,7 +39,7 @@ uint8_t _instruction::dissassemble(uint8_t *data, uint16_t pc) {
     } else if (op_size == 2) {
         auto b1 = data[0];
         cout << hex << setfill('0') << std::right;
-        cout  << setw(2) << (int) b1 << setw(2) << " ";
+        cout  << setw(2) << (int) b1 << setfill(' ') << setw(2) << " ";
     } else if (op_size == 1) {
         cout  << setw(4) << setfill(' ') << " ";
     }
@@ -58,6 +58,8 @@ uint8_t _instruction::execute(uint8_t * data, cpu_state_t &state) {
     // Call the fn if one exists, the instruction could be a no-op.
     if (this->execute_fn != NULL) this->execute_fn(data, state);
     
+    state.cycles += this->cycle_count;
+
     // Return the cycle_count.  Even if some instruction could return 1 of
     // two values, we don't really care in our emulation.  We will pick
     // the biggest.

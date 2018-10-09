@@ -117,6 +117,24 @@ extern void _06_mvi_b_d8(uint8_t * opcode, cpu_state_t& state) {
   state.b = opcode[0];
 }
 
+void _1a_ldax_d_d8(uint8_t * opcode, cpu_state_t& state) {
+  // A<-(DE)
+  uint16_t offset=(state.d<<8) | state.e;
+  state.a = state.memory[offset];
+}
+
+extern void _23_inx_h_d8(uint8_t * opcode, cpu_state_t& state) {
+  // HL<-HL+1
+  state.l++;
+  if (0 == state.l) state.h++;
+}
+
+void _77_mov_m_a_d8(int8_t * opcode, cpu_state_t& state) {
+  // (HL)<-C 
+  uint16_t offset=(state.h<<8) | state.l;
+  state.memory[offset] = state.a;
+}
+
 // +++++++ END: 16 bits load/store instructions
 
 // +++++++ START: 16 bits load/store instructions
@@ -139,3 +157,12 @@ extern void _31_lxi_sp_d16(uint8_t * opcode, cpu_state_t& state) {
 
 // +++++++ END: 16 bits load/store instructions
 
+
+// +++++++ START: 16 bits arithmetic/logical instructions
+void _13_inx_d_d16(uint8_t * opcode, cpu_state_t& state) {
+  // DE<-DE+1
+  state.d++;
+  if (0 == state.d) state.e++;
+}
+
+// +++++++ END: 16 bits arithmetic/logical instructions
