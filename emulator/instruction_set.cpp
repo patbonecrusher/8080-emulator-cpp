@@ -48,66 +48,103 @@ extern void _fb_ei(uint8_t * opcode, cpu_state_t& state) { state.int_enable = tr
 
 // +++++++ Jump/Call instructions
 extern void _c0_rnz(uint8_t * opcode, cpu_state_t& state) {
-  if (0 == state.cc.z) {
+  if (!state.cc.z) {
     state.pc = (state.memory[state.sp+1]<<8 | state.memory[state.sp]); 
     state.sp += 2;
   }
 }
 extern void _c2_jnz_a16(uint8_t * opcode, cpu_state_t& state) {
-  if (0 == state.cc.z) state.pc = OPCODE_TO16BIT(opcode); // else is no-op
+  if (!state.cc.z) state.pc = OPCODE_TO16BIT(opcode); // else is no-op
 }
-extern void _c3_jmp_a16(uint8_t * opcode, cpu_state_t& state) { state.pc = OPCODE_TO16BIT(opcode); }
-extern void _c4_cnz_a16(uint8_t * opcode, cpu_state_t& state) {}
-extern void _c7_rst_0(uint8_t * opcode, cpu_state_t& state) {}
-extern void _c8_rz(uint8_t * opcode, cpu_state_t& state) {}
-extern void _c9_ret(uint8_t * opcode, cpu_state_t& state) {}
-extern void _ca_jz_a16(uint8_t * opcode, cpu_state_t& state) {}
-extern void _cb_jmp_a16_alt(uint8_t * opcode, cpu_state_t& state) {}
-extern void _cc_cz_a16(uint8_t * opcode, cpu_state_t& state) {}
+extern void _c3_jmp_a16(uint8_t * opcode, cpu_state_t& state) { 
+  state.pc = OPCODE_TO16BIT(opcode);
+}
+extern void _c4_cnz_a16(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _c7_rst_0(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _c8_rz(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _c9_ret(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _ca_jz_a16(uint8_t * opcode, cpu_state_t& state) {
+  if (state.cc.z) state.pc = OPCODE_TO16BIT(opcode);
+}
+extern void _cb_jmp_a16_alt(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _cc_cz_a16(uint8_t * opcode, cpu_state_t& state) {exit(1);}
 extern void _cd_call_a16(uint8_t * opcode, cpu_state_t& state) {
+    if (5 ==  ((opcode[1] << 8) | opcode[0]))    
+    {    
+        if (state.c == 9)    
+        {    
+            uint16_t offset = (state.d<<8) | (state.e);    
+            char *str = (char*) &state.memory[offset+3];  //skip the prefix bytes    
+            while (*str != '$')    
+                printf("%c", *str++);    
+            printf("\n");    
+        }    
+        else if (state.c == 2)    
+        {    
+            //saw this in the inspected code, never saw it called    
+            printf ("print char routine called\n");    
+        }    
+    }    
+    else if (0 ==  ((opcode[1] << 8) | opcode[0]))    
+    {    
+        exit(0);    
+    }  
   // (SP-1)<-PC.hi;
   // (SP-2)<-PC.lo;
   // SP<-SP+2;
   // PC=adr
-  uint16_t ret = state.pc;
-  state.write_mem(state.sp-1, (state.pc >> 8) & 0xff);
-  state.write_mem(state.sp-2, (state.pc & 0xff));
-  state.sp = state.sp-2;
-  state.pc = OPCODE_TO16BIT(opcode);
+  // uint16_t ret = state.pc;
+  // state.write_mem(state.sp-1, (state.pc >> 8) & 0xff);
+  // state.write_mem(state.sp-2, (state.pc & 0xff));
+  // state.sp = state.sp-2;
+  // state.pc = OPCODE_TO16BIT(opcode);
 }
-extern void _cf_rst_1(uint8_t * opcode, cpu_state_t& state) {}
+extern void _cf_rst_1(uint8_t * opcode, cpu_state_t& state) {exit(1);}
 
-extern void _d0_rnc(uint8_t * opcode, cpu_state_t& state) {}
-extern void _d2_jnc_a16(uint8_t * opcode, cpu_state_t& state) {}
-extern void _d4_cnc_a16(uint8_t * opcode, cpu_state_t& state) {}
-extern void _d7_rst_2(uint8_t * opcode, cpu_state_t& state) {}
-extern void _d8_rc(uint8_t * opcode, cpu_state_t& state) {}
-extern void _d9_ret_alt(uint8_t * opcode, cpu_state_t& state) {}
-extern void _da_jc_a16(uint8_t * opcode, cpu_state_t& state) {}
-extern void _dc_cc_a16(uint8_t * opcode, cpu_state_t& state) {}
-extern void _dd_call_a16_alt(uint8_t * opcode, cpu_state_t& state) {}
-extern void _df_rst_3(uint8_t * opcode, cpu_state_t& state) {}
+extern void _d0_rnc(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _d2_jnc_a16(uint8_t * opcode, cpu_state_t& state) {
+  // if N CY, PC<-adr
+  if (!state.cc.cy) state.pc = OPCODE_TO16BIT(opcode);
+}
+extern void _d4_cnc_a16(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _d7_rst_2(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _d8_rc(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _d9_ret_alt(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _da_jc_a16(uint8_t * opcode, cpu_state_t& state) {
+    if (state.cc.cy) state.pc = OPCODE_TO16BIT(opcode);
+}
+extern void _dc_cc_a16(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _dd_call_a16_alt(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _df_rst_3(uint8_t * opcode, cpu_state_t& state) {exit(1);}
 
-extern void _e0_rpo(uint8_t * opcode, cpu_state_t& state) {}
-extern void _e2_jpo_a16(uint8_t * opcode, cpu_state_t& state) {}
-extern void _e4_cpo_a16(uint8_t * opcode, cpu_state_t& state) {}
-extern void _e7_rst_4(uint8_t * opcode, cpu_state_t& state) {}
-extern void _e8_rpe(uint8_t * opcode, cpu_state_t& state) {}
-extern void _e9_phcl(uint8_t * opcode, cpu_state_t& state) {}
-extern void _ea_jpe_a16(uint8_t * opcode, cpu_state_t& state) {}
-extern void _ec_cpe_a16(uint8_t * opcode, cpu_state_t& state) {}
-extern void _ed_call_a16_alt(uint8_t * opcode, cpu_state_t& state) {}
-extern void _ef_rst_5(uint8_t * opcode, cpu_state_t& state) {}
+extern void _e0_rpo(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _e2_jpo_a16(uint8_t * opcode, cpu_state_t& state) {
+  if (!state.cc.p) state.pc = OPCODE_TO16BIT(opcode);
+}
+extern void _e4_cpo_a16(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _e7_rst_4(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _e8_rpe(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _e9_phcl(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _ea_jpe_a16(uint8_t * opcode, cpu_state_t& state) {
+    if (state.cc.p) state.pc = OPCODE_TO16BIT(opcode);
+}
+extern void _ec_cpe_a16(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _ed_call_a16_alt(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _ef_rst_5(uint8_t * opcode, cpu_state_t& state) {exit(1);}
 
-extern void _f0_rp(uint8_t * opcode, cpu_state_t& state) {}
-extern void _f2_jp_a16(uint8_t * opcode, cpu_state_t& state) {}
-extern void _f4_cp_a16(uint8_t * opcode, cpu_state_t& state) {}
-extern void _f7_rst_6(uint8_t * opcode, cpu_state_t& state) {}
-extern void _f8_rm(uint8_t * opcode, cpu_state_t& state) {}
-extern void _fa_jm_a16(uint8_t * opcode, cpu_state_t& state) {}
-extern void _fc_cm_a16(uint8_t * opcode, cpu_state_t& state) {}
-extern void _fd_call_a16_alt(uint8_t * opcode, cpu_state_t& state) {}
-extern void _ff_rst_7(uint8_t * opcode, cpu_state_t& state) {}
+extern void _f0_rp(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _f2_jp_a16(uint8_t * opcode, cpu_state_t& state) {
+  if (state.cc.p) state.pc = OPCODE_TO16BIT(opcode);
+}
+extern void _f4_cp_a16(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _f7_rst_6(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _f8_rm(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _fa_jm_a16(uint8_t * opcode, cpu_state_t& state) {
+  if (state.cc.s) state.pc = OPCODE_TO16BIT(opcode);
+}
+extern void _fc_cm_a16(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _fd_call_a16_alt(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _ff_rst_7(uint8_t * opcode, cpu_state_t& state) {exit(1);}
 
 // +++++++ END: Jump/Calls instructions
 
@@ -157,6 +194,27 @@ extern void _31_lxi_sp_d16(uint8_t * opcode, cpu_state_t& state) {
 
 // +++++++ END: 16 bits load/store instructions
 
+// +++++++ START: 8 bits arithmetic/logical instructions
+void _05_dcr_b(uint8_t * opcode, cpu_state_t& state) {
+  // B<-B-1
+  state.b -= 1;
+  state.flagZSP(state.b);
+}
+
+void _c6_adi_d8(uint8_t * opcode, cpu_state_t& state) {
+  // A<-A+data
+  uint16_t x = (uint16_t) state.a + (uint16_t) opcode[0];
+  state.flagZSP(x & 0xff);
+	state.cc.cy = (x > 0xff);
+	state.a = x & 0xff;
+}
+
+void _e6_ani_d8(uint8_t * opcode, cpu_state_t& state) {
+  // A<-A&data
+  state.logic_flags_a(state.a & opcode[0]);
+}
+
+// +++++++ END: 8 bits arithmetic/logical instructions
 
 // +++++++ START: 16 bits arithmetic/logical instructions
 void _13_inx_d_d16(uint8_t * opcode, cpu_state_t& state) {

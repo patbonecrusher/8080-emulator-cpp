@@ -64,6 +64,12 @@ void _21_lxi_h_d16(uint8_t * opcode, cpu_state_t& state);
 void _31_lxi_sp_d16(uint8_t * opcode, cpu_state_t& state);
 // +++++++ END: 16 bits load/store instructions
 
+// +++++++ START: 8 bits arithmetic/logical instructions
+void _05_dcr_b(uint8_t * opcode, cpu_state_t& state);
+void _c6_adi_d8(uint8_t * opcode, cpu_state_t& state);
+void _e6_ani_d8(uint8_t * opcode, cpu_state_t& state);
+// +++++++ END: 8 bits arithmetic/logical instructions
+
 // +++++++ START: 16 bits arithmetic/logical instructions
 void _13_inx_d_d16(uint8_t * opcode, cpu_state_t& state);
 // +++++++ END: 16 bits arithmetic/logical instructions

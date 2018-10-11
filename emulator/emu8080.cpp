@@ -786,26 +786,12 @@ int main (int argc, char**argv) {
   // dissassemble8080Blob(fileContent);
 
   auto fileName = argv[1];
+  int offset = strtol(argv[2], NULL, 16);
 	int done = 0;
 
   auto core = cpu();
   core.load_instruction_set();
-  ReadFileIntoBufferAt(core.memory, fileName, 0);
-	while (done == 0)
-	{
-    core.step();
-  }
-
-	auto state = Init8080();
-
-	ReadFileIntoMemoryAt(state, fileName, 0);
-
-	while (done == 0)
-	{
-		done = emulate8080Op(state);
-	}
-
-  delete state;
-
-  return 0;
+  core.cpu_state.pc = offset;
+  ReadFileIntoBufferAt(core.memory, fileName, offset);
+  return core.run();
 }

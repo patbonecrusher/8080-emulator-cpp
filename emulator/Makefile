@@ -21,10 +21,10 @@ all: $(APP) $(OBJ)
 	@echo "hello"
 
 test: $(APP)
-	./$(APP) ../roms/space-invaders/invaders
+	./$(APP) ../roms/space-invaders/invaders 0
 
 diag: $(APP)
-	./$(APP) ../roms/cpudiag.bin
+	./$(APP) ../roms/cpudiag.bin 100
 
 clean:
 	rm -rf *.o *.so.* *.a *.la $(APP)

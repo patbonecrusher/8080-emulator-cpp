@@ -12,6 +12,8 @@ class cpu {
         // load binary data into memory
         void load_firmware_in_memory(uint8_t *mem_buffer, uint16_t address);
 
+        int run();
+        
         // return a copy of the state.
         void step();
 
@@ -19,7 +21,7 @@ class cpu {
 
     public:
         uint8_t           *memory;
-    private:
         cpu_state_t       cpu_state;
+    private:
         instruction_map_t instructions;
 };

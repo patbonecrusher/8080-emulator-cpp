@@ -63,6 +63,12 @@ void _cpu_state::logic_flags_a(uint16_t value) {
 	cc.p = parity(a, 8);
 }
 
+void _cpu_state::flagZSP(uint8_t val) {
+	cc.z = (val == 0);
+	cc.s = (0x80 == (val & 0x80));
+	cc.p = parity(val, 8);
+}
+
 void _cpu_state::write_mem(uint16_t address, uint8_t value) {
     if (address < 0x2000)
     {
