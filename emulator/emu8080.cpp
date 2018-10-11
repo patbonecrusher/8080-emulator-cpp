@@ -779,7 +779,16 @@ State8080* Init8080(void)
 	return state;
 }
 
+#include <termios.h>
+#include <unistd.h>
+
 int main (int argc, char**argv) {
+  termios oldt;
+  tcgetattr(STDIN_FILENO, &oldt);
+  termios newt = oldt;
+  newt.c_lflag &= ~ECHO;
+  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+
   // auto file = string(argv[1]);
   // auto fileContent = load_file(file);
   // std::cout << "File content size is: " << fileContent.size() << std::endl;
@@ -793,5 +802,15 @@ int main (int argc, char**argv) {
   core.load_instruction_set();
   core.cpu_state.pc = offset;
   ReadFileIntoBufferAt(core.memory, fileName, offset);
-  return core.run();
+
+  char c = 'n';
+  while (c != 's') {
+    core.next();
+    system("stty raw"); 
+    c = getchar();
+    system("stty cooked"); 
+  }
+  newt.c_lflag |= ECHO;  
+  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+  // return core.run();
 }

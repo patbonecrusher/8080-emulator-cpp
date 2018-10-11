@@ -15,7 +15,7 @@ class cpu {
         int run();
         
         // return a copy of the state.
-        void step();
+        void next();
 
     private:
 

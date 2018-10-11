@@ -70,16 +70,16 @@ void _cpu_state::flagZSP(uint8_t val) {
 }
 
 void _cpu_state::write_mem(uint16_t address, uint8_t value) {
-    if (address < 0x2000)
-    {
-        printf("Writing ROM not allowed %x\n", address);
-        return;
-    }
-    if (address >=0x4000)
-    {
-        printf("Writing out of Space Invaders RAM not allowed %x\n", address);
-        return;
-    }
+    // if (address < 0x2000)
+    // {
+    //     printf("Writing ROM not allowed %x\n", address);
+    //     return;
+    // }
+    // if (address >=0x4000)
+    // {
+    //     printf("Writing out of Space Invaders RAM not allowed %x\n", address);
+    //     return;
+    // }
     
     memory[address] = value;
 }

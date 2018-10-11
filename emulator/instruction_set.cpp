@@ -59,15 +59,40 @@ extern void _c2_jnz_a16(uint8_t * opcode, cpu_state_t& state) {
 extern void _c3_jmp_a16(uint8_t * opcode, cpu_state_t& state) { 
   state.pc = OPCODE_TO16BIT(opcode);
 }
-extern void _c4_cnz_a16(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _c4_cnz_a16(uint8_t * opcode, cpu_state_t& state) {
+  // 	if NZ, CALL adr
+  if (state.cc.z == 0) {
+    uint16_t ret = state.pc;
+    state.write_mem(state.sp-1, (ret >> 8) & 0xff);
+    state.write_mem(state.sp-2, (ret & 0xff));
+    state.sp -= 2;
+    state.pc = OPCODE_TO16BIT(opcode);
+  }
+}
 extern void _c7_rst_0(uint8_t * opcode, cpu_state_t& state) {exit(1);}
-extern void _c8_rz(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _c8_rz(uint8_t * opcode, cpu_state_t& state) {
+  // if Z, RET
+  if (state.cc.z == 1) {
+    state.pc = state.memory[state.sp] | (state.memory[state.sp+1]<<8);
+    state.sp += 2;
+  } 
+}
 extern void _c9_ret(uint8_t * opcode, cpu_state_t& state) {exit(1);}
 extern void _ca_jz_a16(uint8_t * opcode, cpu_state_t& state) {
   if (state.cc.z) state.pc = OPCODE_TO16BIT(opcode);
 }
 extern void _cb_jmp_a16_alt(uint8_t * opcode, cpu_state_t& state) {exit(1);}
-extern void _cc_cz_a16(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _cc_cz_a16(uint8_t * opcode, cpu_state_t& state) {
+  // 	if Z, CALL adr
+  if (state.cc.z == 1) {
+    uint16_t ret = state.pc;
+    state.write_mem(state.sp-1, (ret >> 8) & 0xff);
+    state.write_mem(state.sp-2, (ret & 0xff));
+    state.sp -= 2;
+    state.pc = OPCODE_TO16BIT(opcode);
+  }
+}
+
 extern void _cd_call_a16(uint8_t * opcode, cpu_state_t& state) {
     if (5 ==  ((opcode[1] << 8) | opcode[0]))    
     {    
@@ -88,61 +113,158 @@ extern void _cd_call_a16(uint8_t * opcode, cpu_state_t& state) {
     else if (0 ==  ((opcode[1] << 8) | opcode[0]))    
     {    
         exit(0);    
-    }  
-  // (SP-1)<-PC.hi;
-  // (SP-2)<-PC.lo;
-  // SP<-SP+2;
-  // PC=adr
-  // uint16_t ret = state.pc;
-  // state.write_mem(state.sp-1, (state.pc >> 8) & 0xff);
-  // state.write_mem(state.sp-2, (state.pc & 0xff));
-  // state.sp = state.sp-2;
-  // state.pc = OPCODE_TO16BIT(opcode);
+    } else {
+      // (SP-1)<-PC.hi;
+      // (SP-2)<-PC.lo;
+      // SP<-SP+2;
+      // PC=adr
+      uint16_t ret = state.pc;
+      state.write_mem(state.sp-1, (state.pc >> 8) & 0xff);
+      state.write_mem(state.sp-2, (state.pc & 0xff));
+      state.sp = state.sp-2;
+      state.pc = OPCODE_TO16BIT(opcode);
+    }
 }
 extern void _cf_rst_1(uint8_t * opcode, cpu_state_t& state) {exit(1);}
 
-extern void _d0_rnc(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _d0_rnc(uint8_t * opcode, cpu_state_t& state) {
+  // if NCY, RET
+  if (state.cc.cy == 0) {
+    state.pc = state.memory[state.sp] | (state.memory[state.sp+1]<<8);
+    state.sp += 2;
+  } 
+}
+
 extern void _d2_jnc_a16(uint8_t * opcode, cpu_state_t& state) {
   // if N CY, PC<-adr
   if (!state.cc.cy) state.pc = OPCODE_TO16BIT(opcode);
 }
-extern void _d4_cnc_a16(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _d4_cnc_a16(uint8_t * opcode, cpu_state_t& state) {
+  // 	if NCY, CALL adr
+  if (state.cc.cy == 0) {
+    uint16_t ret = state.pc;
+    state.write_mem(state.sp-1, (ret >> 8) & 0xff);
+    state.write_mem(state.sp-2, (ret & 0xff));
+    state.sp -= 2;
+    state.pc = OPCODE_TO16BIT(opcode);
+  }
+}
 extern void _d7_rst_2(uint8_t * opcode, cpu_state_t& state) {exit(1);}
-extern void _d8_rc(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _d8_rc(uint8_t * opcode, cpu_state_t& state) {
+  // if CY, RET
+  if (state.cc.cy != 0) {
+    state.pc = state.memory[state.sp] | (state.memory[state.sp+1]<<8);
+    state.sp += 2;
+  }  
+}
 extern void _d9_ret_alt(uint8_t * opcode, cpu_state_t& state) {exit(1);}
 extern void _da_jc_a16(uint8_t * opcode, cpu_state_t& state) {
     if (state.cc.cy) state.pc = OPCODE_TO16BIT(opcode);
 }
-extern void _dc_cc_a16(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _dc_cc_a16(uint8_t * opcode, cpu_state_t& state) {
+  // if CY, CALL adr 
+  // TODO: I DON'T UNDERSTAND THIS HERE
+  // WHY ARE WE OPERATING ON THE NEXT INSTRUCTION ADDRESS.
+  if (state.cc.cy) {
+    uint16_t ret = state.pc;
+    state.write_mem(state.sp-1, (ret >> 8) & 0xff);
+    state.write_mem(state.sp-2, (ret & 0xff));
+    state.sp -= 2;
+    state.pc = OPCODE_TO16BIT(opcode);
+  }
+
+}
 extern void _dd_call_a16_alt(uint8_t * opcode, cpu_state_t& state) {exit(1);}
 extern void _df_rst_3(uint8_t * opcode, cpu_state_t& state) {exit(1);}
 
-extern void _e0_rpo(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _e0_rpo(uint8_t * opcode, cpu_state_t& state) {
+  // 	if PO, RET
+  if (state.cc.p == 0) {
+    state.pc = state.memory[state.sp] | (state.memory[state.sp+1]<<8);
+    state.sp += 2;
+  }
+}
 extern void _e2_jpo_a16(uint8_t * opcode, cpu_state_t& state) {
   if (!state.cc.p) state.pc = OPCODE_TO16BIT(opcode);
 }
-extern void _e4_cpo_a16(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _e4_cpo_a16(uint8_t * opcode, cpu_state_t& state) {
+  // if PO, CALL adr
+  if (state.cc.p == 0) {
+    uint16_t ret = state.pc;
+    state.write_mem(state.sp-1, (ret >> 8) & 0xff);
+    state.write_mem(state.sp-2, (ret & 0xff));
+    state.sp -= 2;
+    state.pc = OPCODE_TO16BIT(opcode);
+  }
+}
+
 extern void _e7_rst_4(uint8_t * opcode, cpu_state_t& state) {exit(1);}
-extern void _e8_rpe(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _e8_rpe(uint8_t * opcode, cpu_state_t& state) {
+  // if PE, RET
+  if (state.cc.p != 0) {
+		state.pc = state.memory[state.sp] | (state.memory[state.sp+1]<<8);
+		state.sp += 2;
+	}
+}
 extern void _e9_phcl(uint8_t * opcode, cpu_state_t& state) {exit(1);}
 extern void _ea_jpe_a16(uint8_t * opcode, cpu_state_t& state) {
     if (state.cc.p) state.pc = OPCODE_TO16BIT(opcode);
 }
-extern void _ec_cpe_a16(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _ec_cpe_a16(uint8_t * opcode, cpu_state_t& state) {
+  // if PE, CALL adr
+  if (state.cc.p != 0) {
+    uint16_t ret = state.pc;
+    state.write_mem(state.sp-1, (ret >> 8) & 0xff);
+    state.write_mem(state.sp-2, (ret & 0xff));
+    state.sp -= 2;
+    state.pc = OPCODE_TO16BIT(opcode);
+  }
+}
+
 extern void _ed_call_a16_alt(uint8_t * opcode, cpu_state_t& state) {exit(1);}
 extern void _ef_rst_5(uint8_t * opcode, cpu_state_t& state) {exit(1);}
 
-extern void _f0_rp(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _f0_rp(uint8_t * opcode, cpu_state_t& state) {
+  // if P, RET
+  if (state.cc.s == 0) {
+    state.pc = state.memory[state.sp] | (state.memory[state.sp+1]<<8);
+    state.sp += 2;
+  }    
+}
 extern void _f2_jp_a16(uint8_t * opcode, cpu_state_t& state) {
   if (state.cc.p) state.pc = OPCODE_TO16BIT(opcode);
 }
-extern void _f4_cp_a16(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _f4_cp_a16(uint8_t * opcode, cpu_state_t& state) {
+  // if P, PC <- adr
+  if (state.cc.s == 0) {
+    uint16_t ret = state.pc;
+    state.write_mem(state.sp-1, (ret >> 8) & 0xff);
+    state.write_mem(state.sp-2, (ret & 0xff));
+    state.sp -= 2;
+    state.pc = OPCODE_TO16BIT(opcode);
+  }
+}
 extern void _f7_rst_6(uint8_t * opcode, cpu_state_t& state) {exit(1);}
-extern void _f8_rm(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _f8_rm(uint8_t * opcode, cpu_state_t& state) {
+  // if M, RET
+  if (state.cc.s != 0) {
+    state.pc = state.memory[state.sp] | (state.memory[state.sp+1]<<8);
+    state.sp += 2;
+  }    
+}
 extern void _fa_jm_a16(uint8_t * opcode, cpu_state_t& state) {
   if (state.cc.s) state.pc = OPCODE_TO16BIT(opcode);
 }
-extern void _fc_cm_a16(uint8_t * opcode, cpu_state_t& state) {exit(1);}
+extern void _fc_cm_a16(uint8_t * opcode, cpu_state_t& state) {
+  // if M, CALL adr
+  if (state.cc.s != 0) {
+    uint16_t ret = state.pc;
+    state.write_mem(state.sp-1, (ret >> 8) & 0xff);
+    state.write_mem(state.sp-2, (ret & 0xff));
+    state.sp -= 2;
+    state.pc = OPCODE_TO16BIT(opcode);
+  }
+}
 extern void _fd_call_a16_alt(uint8_t * opcode, cpu_state_t& state) {exit(1);}
 extern void _ff_rst_7(uint8_t * opcode, cpu_state_t& state) {exit(1);}
 
@@ -209,9 +331,55 @@ void _c6_adi_d8(uint8_t * opcode, cpu_state_t& state) {
 	state.a = x & 0xff;
 }
 
+void _ce_aci_d8(uint8_t * opcode, cpu_state_t& state) {
+  // 	A <- A + data + CY
+  uint16_t x = (uint16_t) state.a + (uint16_t) opcode[0] + state.cc.cy;
+  state.flagZSP(x & 0xff);
+	state.cc.cy = (x > 0xff);
+	state.a = x & 0xff;
+}
+
+void _d6_sui_d8(uint8_t * opcode, cpu_state_t& state) {
+  // A <- A - data
+  uint16_t x = (uint16_t) state.a - (uint16_t) opcode[0];
+  state.flagZSP(x & 0xff);
+	state.cc.cy = (x > 0xff);
+	state.a = x & 0xff;
+}
+
+void _de_sbi_d8(uint8_t * opcode, cpu_state_t& state) {
+  // A <- A - data - CY
+  uint16_t x = (uint16_t) state.a - (uint16_t) opcode[0] - state.cc.cy;
+  state.flagZSP(x & 0xff);
+	state.cc.cy = (x > 0xff);
+	state.a = x & 0xff;
+}
+
 void _e6_ani_d8(uint8_t * opcode, cpu_state_t& state) {
   // A<-A&data
   state.logic_flags_a(state.a & opcode[0]);
+}
+
+void _ee_xri_d8(uint8_t * opcode, cpu_state_t& state) {
+  // A<-A^data
+  uint16_t x = (uint16_t) state.a ^ (uint16_t) opcode[0];
+  state.flagZSP(x & 0xff);
+	state.cc.cy = 0;
+	state.a = x & 0xff;
+}
+
+void _f6_ori_d8(uint8_t * opcode, cpu_state_t& state) {
+  // A<-A|data
+  uint16_t x = (uint16_t) state.a | (uint16_t) opcode[0];
+  state.flagZSP(x & 0xff);
+	state.cc.cy = 0;
+	state.a = x & 0xff;}
+
+void _fe_cpi_d8(uint8_t * opcode, cpu_state_t& state) {
+  // A-data
+  uint8_t x = state.a - opcode[0];
+  state.flagZSP(x);
+  state.cc.cy = (state.a < opcode[0]);
 }
 
 // +++++++ END: 8 bits arithmetic/logical instructions

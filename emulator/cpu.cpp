@@ -19,12 +19,12 @@ void cpu::load_firmware_in_memory(uint8_t *mem_buffer, uint16_t address) {
 
 int cpu::run() {
     while(1) {
-        this->step();
+        this->next();
     }
     return 0;
 }
 
-void cpu::step() {
+void cpu::next() {
     uint8_t opcode = memory[cpu_state.pc];    
 
     this->instructions[opcode].dissassemble(&memory[cpu_state.pc+1], cpu_state.pc);
@@ -129,7 +129,13 @@ void cpu::load_instruction_set() {
     // +++++++ START: 8 bits arithmetic/logical instructions
     ADD_INS(0x05, "DEC B", 5, 1, _05_dcr_b);
     ADD_INS(0xc6, "ADI", 7, 2, _c6_adi_d8);
+    ADD_INS(0xce, "ACI", 7, 2, _ce_aci_d8);
+    ADD_INS(0xd6, "SUI", 7, 2, _d6_sui_d8);
+    ADD_INS(0xde, "SBI", 7, 2, _de_sbi_d8);
     ADD_INS(0xe6, "ANI", 7, 2, _e6_ani_d8);
+    ADD_INS(0xee, "XRI", 7, 2, _ee_xri_d8);
+    ADD_INS(0xf6, "ORI", 7, 2, _f6_ori_d8);
+    ADD_INS(0xfe, "CPI", 7, 2, _fe_cpi_d8);
     // +++++++ END: 8 bits arithmetic/logical instructions
 
     // this->instructions[0x01] = instruction(0x01, nop0, "LXI    B,#$", 2);

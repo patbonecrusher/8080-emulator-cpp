@@ -67,7 +67,13 @@ void _31_lxi_sp_d16(uint8_t * opcode, cpu_state_t& state);
 // +++++++ START: 8 bits arithmetic/logical instructions
 void _05_dcr_b(uint8_t * opcode, cpu_state_t& state);
 void _c6_adi_d8(uint8_t * opcode, cpu_state_t& state);
+void _ce_aci_d8(uint8_t * opcode, cpu_state_t& state);
+void _d6_sui_d8(uint8_t * opcode, cpu_state_t& state);
+void _de_sbi_d8(uint8_t * opcode, cpu_state_t& state);
 void _e6_ani_d8(uint8_t * opcode, cpu_state_t& state);
+void _ee_xri_d8(uint8_t * opcode, cpu_state_t& state);
+void _f6_ori_d8(uint8_t * opcode, cpu_state_t& state);
+void _fe_cpi_d8(uint8_t * opcode, cpu_state_t& state);
 // +++++++ END: 8 bits arithmetic/logical instructions
 
 // +++++++ START: 16 bits arithmetic/logical instructions
