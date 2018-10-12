@@ -84,6 +84,68 @@ void _cpu_state::write_mem(uint16_t address, uint8_t value) {
     memory[address] = value;
 }
 
+uint8_t _cpu_state::read_from_hl() {
+    uint16_t offset = (h << 8) | l;
+    return memory[offset];
+}
+
+void _cpu_state::write_to_hl(uint8_t value) {
+    uint16_t offset = (h << 8) | l;
+    this->write_mem(offset, value);
+}
+
+void _cpu_state::arith_flags_a(uint16_t res)
+{
+	cc.cy = (res > 0xff);
+	cc.z = ((res&0xff) == 0);
+	cc.s = (0x80 == (res & 0x80));
+	cc.p = parity(res&0xff, 8);
+}
+
+void _cpu_state::do_add_ops(uint16_t value) {
+  uint16_t res = (uint16_t) a + value;
+  this->arith_flags_a(res);
+  a=(res&0xff);
+}
+
+void _cpu_state::do_adc_ops(uint16_t value) {
+  uint16_t res = (uint16_t) a + value + (uint16_t) cc.cy;
+  this->arith_flags_a(res);
+  a=(res&0xff);
+}
+
+void _cpu_state::do_sub_ops(uint16_t value) {
+  uint16_t res = (uint16_t) a - value - (uint16_t) cc.cy;
+  this->arith_flags_a(res);
+  a=(res&0xff);
+}
+
+void _cpu_state::do_sbb_ops(uint16_t value) {
+  uint16_t res = (uint16_t) a - value - (uint16_t) cc.cy;
+  this->arith_flags_a(res);
+  a=(res&0xff);
+}
+
+void _cpu_state::do_ana_ops(uint16_t value) {
+  uint16_t res = (uint16_t) a & value;
+  this->arith_flags_a(res);
+}
+
+void _cpu_state::do_xra_ops(uint16_t value) {
+  uint16_t res = (uint16_t) a ^ value;
+  this->arith_flags_a(res);
+}
+
+void _cpu_state::do_ora_ops(uint16_t value) {
+  uint16_t res = (uint16_t) a | value;
+  this->arith_flags_a(res);
+}
+
+void _cpu_state::do_cmp_ops(uint16_t value) {
+  uint16_t res = (uint16_t) a - value;
+  this->arith_flags_a(res);
+}
+
 
 ostream& operator<<(ostream& os, const _cpu_state& cs) {
     os  << cs.cc;

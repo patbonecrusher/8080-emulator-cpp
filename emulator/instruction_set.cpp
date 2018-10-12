@@ -288,11 +288,82 @@ extern void _23_inx_h_d8(uint8_t * opcode, cpu_state_t& state) {
   if (0 == state.l) state.h++;
 }
 
-void _77_mov_m_a_d8(int8_t * opcode, cpu_state_t& state) {
-  // (HL)<-C 
-  uint16_t offset=(state.h<<8) | state.l;
-  state.memory[offset] = state.a;
+extern void _3e_mvi_a_d8(uint8_t * opcode, cpu_state_t& state) {
+  // A<-byte2
+  state.a = opcode[0];
 }
+
+void _40_mov_b_b_d8(uint8_t * opcode, cpu_state_t& state) { state.b = state.b; }
+void _41_mov_b_c_d8(uint8_t * opcode, cpu_state_t& state) { state.b = state.c; }
+void _42_mov_b_d_d8(uint8_t * opcode, cpu_state_t& state) { state.b = state.d; }
+void _43_mov_b_e_d8(uint8_t * opcode, cpu_state_t& state) { state.b = state.e; }
+void _44_mov_b_h_d8(uint8_t * opcode, cpu_state_t& state) { state.b = state.h; }
+void _45_mov_b_l_d8(uint8_t * opcode, cpu_state_t& state) { state.b = state.l; }
+void _46_mov_b_m_d8(uint8_t * opcode, cpu_state_t& state) { state.b = state.read_from_hl(); }
+void _47_mov_b_a_d8(uint8_t * opcode, cpu_state_t& state) { state.b = state.a; }
+
+void _48_mov_c_b_d8(uint8_t * opcode, cpu_state_t& state) { state.c = state.b; }
+void _49_mov_c_c_d8(uint8_t * opcode, cpu_state_t& state) { state.c = state.c; }
+void _4a_mov_c_d_d8(uint8_t * opcode, cpu_state_t& state) { state.c = state.d; }
+void _4b_mov_c_e_d8(uint8_t * opcode, cpu_state_t& state) { state.c = state.e; }
+void _4c_mov_c_h_d8(uint8_t * opcode, cpu_state_t& state) { state.c = state.h; }
+void _4d_mov_c_l_d8(uint8_t * opcode, cpu_state_t& state) { state.c = state.l; }
+void _4e_mov_c_m_d8(uint8_t * opcode, cpu_state_t& state) { state.c = state.read_from_hl(); }
+void _4f_mov_c_a_d8(uint8_t * opcode, cpu_state_t& state) { state.c = state.a; }
+
+void _50_mov_d_b_d8(uint8_t * opcode, cpu_state_t& state) { state.d = state.b; }
+void _51_mov_d_c_d8(uint8_t * opcode, cpu_state_t& state) { state.d = state.c; }
+void _52_mov_d_d_d8(uint8_t * opcode, cpu_state_t& state) { state.d = state.d; }
+void _53_mov_d_e_d8(uint8_t * opcode, cpu_state_t& state) { state.d = state.e; }
+void _54_mov_d_h_d8(uint8_t * opcode, cpu_state_t& state) { state.d = state.h; }
+void _55_mov_d_l_d8(uint8_t * opcode, cpu_state_t& state) { state.d = state.l; }
+void _56_mov_d_m_d8(uint8_t * opcode, cpu_state_t& state) { state.d = state.read_from_hl(); }
+void _57_mov_d_a_d8(uint8_t * opcode, cpu_state_t& state) { state.d = state.a; }
+
+void _58_mov_e_b_d8(uint8_t * opcode, cpu_state_t& state) { state.e = state.b; }
+void _59_mov_e_c_d8(uint8_t * opcode, cpu_state_t& state) { state.e = state.c; }
+void _5a_mov_e_d_d8(uint8_t * opcode, cpu_state_t& state) { state.e = state.d; }
+void _5b_mov_e_e_d8(uint8_t * opcode, cpu_state_t& state) { state.e = state.e; }
+void _5c_mov_e_h_d8(uint8_t * opcode, cpu_state_t& state) { state.e = state.h; }
+void _5d_mov_e_l_d8(uint8_t * opcode, cpu_state_t& state) { state.e = state.l; }
+void _5e_mov_e_m_d8(uint8_t * opcode, cpu_state_t& state) { state.e = state.read_from_hl(); }
+void _5f_mov_e_a_d8(uint8_t * opcode, cpu_state_t& state) { state.e = state.a; }
+
+void _60_mov_h_b_d8(uint8_t * opcode, cpu_state_t& state) { state.h = state.b; }
+void _61_mov_h_c_d8(uint8_t * opcode, cpu_state_t& state) { state.h = state.c; }
+void _62_mov_h_d_d8(uint8_t * opcode, cpu_state_t& state) { state.h = state.d; }
+void _63_mov_h_e_d8(uint8_t * opcode, cpu_state_t& state) { state.h = state.e; }
+void _64_mov_h_h_d8(uint8_t * opcode, cpu_state_t& state) { state.h = state.h; }
+void _65_mov_h_l_d8(uint8_t * opcode, cpu_state_t& state) { state.h = state.l; }
+void _66_mov_h_m_d8(uint8_t * opcode, cpu_state_t& state) { state.h = state.read_from_hl(); }
+void _67_mov_h_a_d8(uint8_t * opcode, cpu_state_t& state) { state.h = state.a; }
+
+void _68_mov_l_b_d8(uint8_t * opcode, cpu_state_t& state) { state.l = state.b; }
+void _69_mov_l_c_d8(uint8_t * opcode, cpu_state_t& state) { state.l = state.c; }
+void _6a_mov_l_d_d8(uint8_t * opcode, cpu_state_t& state) { state.l = state.d; }
+void _6b_mov_l_e_d8(uint8_t * opcode, cpu_state_t& state) { state.l = state.e; }
+void _6c_mov_l_h_d8(uint8_t * opcode, cpu_state_t& state) { state.l = state.h; }
+void _6d_mov_l_l_d8(uint8_t * opcode, cpu_state_t& state) { state.l = state.l; }
+void _6e_mov_l_m_d8(uint8_t * opcode, cpu_state_t& state) { state.l = state.read_from_hl(); }
+void _6f_mov_l_a_d8(uint8_t * opcode, cpu_state_t& state) { state.l = state.a; }
+
+void _70_mov_m_b_d8(uint8_t * opcode, cpu_state_t& state) { state.write_to_hl(state.b); }
+void _71_mov_m_c_d8(uint8_t * opcode, cpu_state_t& state) { state.write_to_hl(state.c); }
+void _72_mov_m_d_d8(uint8_t * opcode, cpu_state_t& state) { state.write_to_hl(state.d); }
+void _73_mov_m_e_d8(uint8_t * opcode, cpu_state_t& state) { state.write_to_hl(state.e); }
+void _74_mov_m_h_d8(uint8_t * opcode, cpu_state_t& state) { state.write_to_hl(state.h); }
+void _75_mov_m_l_d8(uint8_t * opcode, cpu_state_t& state) { state.write_to_hl(state.l); }
+void _77_mov_m_a_d8(uint8_t * opcode, cpu_state_t& state) { state.write_to_hl(state.a); }
+
+void _78_mov_a_b_d8(uint8_t * opcode, cpu_state_t& state) { state.a = state.b; }
+void _79_mov_a_c_d8(uint8_t * opcode, cpu_state_t& state) { state.a = state.c; }
+void _7a_mov_a_d_d8(uint8_t * opcode, cpu_state_t& state) { state.a = state.d; }
+void _7b_mov_a_e_d8(uint8_t * opcode, cpu_state_t& state) { state.a = state.e; }
+void _7c_mov_a_h_d8(uint8_t * opcode, cpu_state_t& state) { state.a = state.h; }
+void _7d_mov_a_l_d8(uint8_t * opcode, cpu_state_t& state) { state.a = state.l; }
+void _7e_mov_a_m_d8(uint8_t * opcode, cpu_state_t& state) { state.a = state.read_from_hl(); }
+void _7f_mov_a_a_d8(uint8_t * opcode, cpu_state_t& state) { state.a = state.a; }
+
 
 // +++++++ END: 16 bits load/store instructions
 
@@ -317,11 +388,111 @@ extern void _31_lxi_sp_d16(uint8_t * opcode, cpu_state_t& state) {
 // +++++++ END: 16 bits load/store instructions
 
 // +++++++ START: 8 bits arithmetic/logical instructions
+
+void _04_inr_b(uint8_t * opcode, cpu_state_t& state) { state.b += 1; state.flagZSP(state.b); }
+void _0c_inr_c(uint8_t * opcode, cpu_state_t& state) { state.c += 1; state.flagZSP(state.c); }
+void _14_inr_d(uint8_t * opcode, cpu_state_t& state) { state.d += 1; state.flagZSP(state.d); }
+void _1c_inr_e(uint8_t * opcode, cpu_state_t& state) { state.e += 1; state.flagZSP(state.e); }
+void _24_inr_h(uint8_t * opcode, cpu_state_t& state) { state.h += 1; state.flagZSP(state.h); }
+void _2c_inr_l(uint8_t * opcode, cpu_state_t& state) { state.l += 1; state.flagZSP(state.l); }
+void _34_inr_m(uint8_t * opcode, cpu_state_t& state) { 
+  uint8_t res = state.read_from_hl() + 1;
+  state.flagZSP(res);
+  state.write_to_hl(res);
+}
+void _3c_inr_a(uint8_t * opcode, cpu_state_t& state) { state.a += 1; state.flagZSP(state.a); }
+
+void _05_dcr_b(uint8_t * opcode, cpu_state_t& state) { state.b -= 1; state.flagZSP(state.b); }
+void _0d_dcr_c(uint8_t * opcode, cpu_state_t& state) { state.c -= 1; state.flagZSP(state.c); }
+void _15_dcr_d(uint8_t * opcode, cpu_state_t& state) { state.d -= 1; state.flagZSP(state.d); }
+void _1d_dcr_e(uint8_t * opcode, cpu_state_t& state) { state.e -= 1; state.flagZSP(state.e); }
+void _25_dcr_h(uint8_t * opcode, cpu_state_t& state) { state.h -= 1; state.flagZSP(state.h); }
+void _2d_dcr_l(uint8_t * opcode, cpu_state_t& state) { state.l -= 1; state.flagZSP(state.l); }
+void _35_dcr_m(uint8_t * opcode, cpu_state_t& state) { 
+  uint8_t res = state.read_from_hl() - 1;
+  state.flagZSP(res);
+  state.write_to_hl(res);
+}
+void _3d_dcr_a(uint8_t * opcode, cpu_state_t& state) { state.a -= 1; state.flagZSP(state.a); }
+
+
 void _05_dcr_b(uint8_t * opcode, cpu_state_t& state) {
   // B<-B-1
   state.b -= 1;
   state.flagZSP(state.b);
 }
+
+void _80_add_b(uint8_t * opcode, cpu_state_t& state) { state.do_add_ops(state.b); }
+void _81_add_c(uint8_t * opcode, cpu_state_t& state) { state.do_add_ops(state.c); }
+void _82_add_d(uint8_t * opcode, cpu_state_t& state) { state.do_add_ops(state.d); }
+void _83_add_e(uint8_t * opcode, cpu_state_t& state) { state.do_add_ops(state.e); }
+void _84_add_h(uint8_t * opcode, cpu_state_t& state) { state.do_add_ops(state.h); }
+void _85_add_l(uint8_t * opcode, cpu_state_t& state) { state.do_add_ops(state.l); }
+void _86_add_m(uint8_t * opcode, cpu_state_t& state) { state.do_add_ops(state.read_from_hl()); }
+void _87_add_a(uint8_t * opcode, cpu_state_t& state) { state.do_add_ops(state.a); }
+
+void _88_adc_b(uint8_t * opcode, cpu_state_t& state) { state.do_adc_ops(state.b); }
+void _89_adc_c(uint8_t * opcode, cpu_state_t& state) { state.do_adc_ops(state.c); }
+void _8a_adc_d(uint8_t * opcode, cpu_state_t& state) { state.do_adc_ops(state.d); }
+void _8b_adc_e(uint8_t * opcode, cpu_state_t& state) { state.do_adc_ops(state.e); }
+void _8c_adc_h(uint8_t * opcode, cpu_state_t& state) { state.do_adc_ops(state.h); }
+void _8d_adc_l(uint8_t * opcode, cpu_state_t& state) { state.do_adc_ops(state.l); }
+void _8e_adc_m(uint8_t * opcode, cpu_state_t& state) { state.do_adc_ops(state.read_from_hl()); }
+void _8f_adc_a(uint8_t * opcode, cpu_state_t& state) { state.do_adc_ops(state.a); }
+
+void _90_sub_b(uint8_t * opcode, cpu_state_t& state) { state.do_sub_ops(state.b); }
+void _91_sub_c(uint8_t * opcode, cpu_state_t& state) { state.do_sub_ops(state.c); }
+void _92_sub_d(uint8_t * opcode, cpu_state_t& state) { state.do_sub_ops(state.d); }
+void _93_sub_e(uint8_t * opcode, cpu_state_t& state) { state.do_sub_ops(state.e); }
+void _94_sub_h(uint8_t * opcode, cpu_state_t& state) { state.do_sub_ops(state.h); }
+void _95_sub_l(uint8_t * opcode, cpu_state_t& state) { state.do_sub_ops(state.l); }
+void _96_sub_m(uint8_t * opcode, cpu_state_t& state) { state.do_sub_ops(state.read_from_hl()); }
+void _97_sub_a(uint8_t * opcode, cpu_state_t& state) { state.do_sub_ops(state.a); }
+
+void _98_sbb_b(uint8_t * opcode, cpu_state_t& state) { state.do_sbb_ops(state.b); }
+void _99_sbb_c(uint8_t * opcode, cpu_state_t& state) { state.do_sbb_ops(state.c); }
+void _9a_sbb_d(uint8_t * opcode, cpu_state_t& state) { state.do_sbb_ops(state.d); }
+void _9b_sbb_e(uint8_t * opcode, cpu_state_t& state) { state.do_sbb_ops(state.e); }
+void _9c_sbb_h(uint8_t * opcode, cpu_state_t& state) { state.do_sbb_ops(state.h); }
+void _9d_sbb_l(uint8_t * opcode, cpu_state_t& state) { state.do_sbb_ops(state.l); }
+void _9e_sbb_m(uint8_t * opcode, cpu_state_t& state) { state.do_sbb_ops(state.read_from_hl()); }
+void _9f_sbb_a(uint8_t * opcode, cpu_state_t& state) { state.do_sbb_ops(state.a); }
+
+void _a0_ana_b(uint8_t * opcode, cpu_state_t& state) { state.do_ana_ops(state.b); }
+void _a1_ana_c(uint8_t * opcode, cpu_state_t& state) { state.do_ana_ops(state.c); }
+void _a2_ana_d(uint8_t * opcode, cpu_state_t& state) { state.do_ana_ops(state.d); }
+void _a3_ana_e(uint8_t * opcode, cpu_state_t& state) { state.do_ana_ops(state.e); }
+void _a4_ana_h(uint8_t * opcode, cpu_state_t& state) { state.do_ana_ops(state.h); }
+void _a5_ana_l(uint8_t * opcode, cpu_state_t& state) { state.do_ana_ops(state.l); }
+void _a6_ana_m(uint8_t * opcode, cpu_state_t& state) { state.do_ana_ops(state.read_from_hl()); }
+void _a7_ana_a(uint8_t * opcode, cpu_state_t& state) { state.do_ana_ops(state.a); }
+
+void _a8_xra_b(uint8_t * opcode, cpu_state_t& state) { state.do_xra_ops(state.b); }
+void _a9_xra_c(uint8_t * opcode, cpu_state_t& state) { state.do_xra_ops(state.c); }
+void _aa_xra_d(uint8_t * opcode, cpu_state_t& state) { state.do_xra_ops(state.d); }
+void _ab_xra_e(uint8_t * opcode, cpu_state_t& state) { state.do_xra_ops(state.e); }
+void _ac_xra_h(uint8_t * opcode, cpu_state_t& state) { state.do_xra_ops(state.h); }
+void _ad_xra_l(uint8_t * opcode, cpu_state_t& state) { state.do_xra_ops(state.l); }
+void _ae_xra_m(uint8_t * opcode, cpu_state_t& state) { state.do_xra_ops(state.read_from_hl()); }
+void _af_xra_a(uint8_t * opcode, cpu_state_t& state) { state.do_xra_ops(state.a); }
+
+void _b0_ora_b(uint8_t * opcode, cpu_state_t& state) { state.do_ora_ops(state.b); }
+void _b1_ora_c(uint8_t * opcode, cpu_state_t& state) { state.do_ora_ops(state.c); }
+void _b2_ora_d(uint8_t * opcode, cpu_state_t& state) { state.do_ora_ops(state.d); }
+void _b3_ora_e(uint8_t * opcode, cpu_state_t& state) { state.do_ora_ops(state.e); }
+void _b4_ora_h(uint8_t * opcode, cpu_state_t& state) { state.do_ora_ops(state.h); }
+void _b5_ora_l(uint8_t * opcode, cpu_state_t& state) { state.do_ora_ops(state.l); }
+void _b6_ora_m(uint8_t * opcode, cpu_state_t& state) { state.do_ora_ops(state.read_from_hl()); }
+void _b7_ora_a(uint8_t * opcode, cpu_state_t& state) { state.do_ora_ops(state.a); }
+
+void _b8_cmp_b(uint8_t * opcode, cpu_state_t& state) { state.do_cmp_ops(state.b); }
+void _b9_cmp_c(uint8_t * opcode, cpu_state_t& state) { state.do_cmp_ops(state.c); }
+void _ba_cmp_d(uint8_t * opcode, cpu_state_t& state) { state.do_cmp_ops(state.d); }
+void _bb_cmp_e(uint8_t * opcode, cpu_state_t& state) { state.do_cmp_ops(state.e); }
+void _bc_cmp_h(uint8_t * opcode, cpu_state_t& state) { state.do_cmp_ops(state.h); }
+void _bd_cmp_l(uint8_t * opcode, cpu_state_t& state) { state.do_cmp_ops(state.l); }
+void _be_cmp_m(uint8_t * opcode, cpu_state_t& state) { state.do_cmp_ops(state.read_from_hl()); }
+void _bf_cmp_a(uint8_t * opcode, cpu_state_t& state) { state.do_cmp_ops(state.a); }
 
 void _c6_adi_d8(uint8_t * opcode, cpu_state_t& state) {
   // A<-A+data
@@ -357,7 +528,12 @@ void _de_sbi_d8(uint8_t * opcode, cpu_state_t& state) {
 
 void _e6_ani_d8(uint8_t * opcode, cpu_state_t& state) {
   // A<-A&data
-  state.logic_flags_a(state.a & opcode[0]);
+  uint16_t x = (uint16_t) state.a & (uint16_t) opcode[0];
+  state.flagZSP(x & 0xff);
+	state.cc.cy = 0;
+	state.a = x & 0xff;
+
+  // state.logic_flags_a(state.a & opcode[0]);
 }
 
 void _ee_xri_d8(uint8_t * opcode, cpu_state_t& state) {
@@ -373,7 +549,8 @@ void _f6_ori_d8(uint8_t * opcode, cpu_state_t& state) {
   uint16_t x = (uint16_t) state.a | (uint16_t) opcode[0];
   state.flagZSP(x & 0xff);
 	state.cc.cy = 0;
-	state.a = x & 0xff;}
+	state.a = x & 0xff;
+}
 
 void _fe_cpi_d8(uint8_t * opcode, cpu_state_t& state) {
   // A-data

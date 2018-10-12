@@ -51,12 +51,86 @@ void _fc_cm_a16(uint8_t * opcode, cpu_state_t& state);
 void _fd_call_a16_alt(uint8_t * opcode, cpu_state_t& state);
 void _ff_rst_7(uint8_t * opcode, cpu_state_t& state);
 
+// +++++++ START: Misc instructions
+void _23_inx_h_d8(uint8_t * opcode, cpu_state_t& state);
+// +++++++ END: Misc instructions
+
 // +++++++ START: 8 bits load/store instructions
 void _06_mvi_b_d8(uint8_t * opcode, cpu_state_t& state);
 void _1a_ldax_d_d8(uint8_t * opcode, cpu_state_t& state);
-void _23_inx_h_d8(uint8_t * opcode, cpu_state_t& state);
-void _77_mov_m_a_d8(int8_t * opcode, cpu_state_t& state);
-// +++++++ END: 16 bits load/store instructions
+void _3e_mvi_a_d8(uint8_t * opcode, cpu_state_t& state);
+
+void _40_mov_b_b_d8(uint8_t * opcode, cpu_state_t& state);
+void _41_mov_b_c_d8(uint8_t * opcode, cpu_state_t& state);
+void _42_mov_b_d_d8(uint8_t * opcode, cpu_state_t& state);
+void _43_mov_b_e_d8(uint8_t * opcode, cpu_state_t& state);
+void _44_mov_b_h_d8(uint8_t * opcode, cpu_state_t& state);
+void _45_mov_b_l_d8(uint8_t * opcode, cpu_state_t& state);
+void _46_mov_b_m_d8(uint8_t * opcode, cpu_state_t& state);
+void _47_mov_b_a_d8(uint8_t * opcode, cpu_state_t& state);
+
+void _48_mov_c_b_d8(uint8_t * opcode, cpu_state_t& state);
+void _49_mov_c_c_d8(uint8_t * opcode, cpu_state_t& state);
+void _4a_mov_c_d_d8(uint8_t * opcode, cpu_state_t& state);
+void _4b_mov_c_e_d8(uint8_t * opcode, cpu_state_t& state);
+void _4c_mov_c_h_d8(uint8_t * opcode, cpu_state_t& state);
+void _4d_mov_c_l_d8(uint8_t * opcode, cpu_state_t& state);
+void _4e_mov_c_m_d8(uint8_t * opcode, cpu_state_t& state);
+void _4f_mov_c_a_d8(uint8_t * opcode, cpu_state_t& state);
+
+void _50_mov_d_b_d8(uint8_t * opcode, cpu_state_t& state);
+void _51_mov_d_c_d8(uint8_t * opcode, cpu_state_t& state);
+void _52_mov_d_d_d8(uint8_t * opcode, cpu_state_t& state);
+void _53_mov_d_e_d8(uint8_t * opcode, cpu_state_t& state);
+void _54_mov_d_h_d8(uint8_t * opcode, cpu_state_t& state);
+void _55_mov_d_l_d8(uint8_t * opcode, cpu_state_t& state);
+void _56_mov_d_m_d8(uint8_t * opcode, cpu_state_t& state);
+void _57_mov_d_a_d8(uint8_t * opcode, cpu_state_t& state);
+
+void _58_mov_e_b_d8(uint8_t * opcode, cpu_state_t& state);
+void _59_mov_e_c_d8(uint8_t * opcode, cpu_state_t& state);
+void _5a_mov_e_d_d8(uint8_t * opcode, cpu_state_t& state);
+void _5b_mov_e_e_d8(uint8_t * opcode, cpu_state_t& state);
+void _5c_mov_e_h_d8(uint8_t * opcode, cpu_state_t& state);
+void _5d_mov_e_l_d8(uint8_t * opcode, cpu_state_t& state);
+void _5e_mov_e_m_d8(uint8_t * opcode, cpu_state_t& state);
+void _5f_mov_e_a_d8(uint8_t * opcode, cpu_state_t& state);
+
+void _60_mov_h_b_d8(uint8_t * opcode, cpu_state_t& state);
+void _61_mov_h_c_d8(uint8_t * opcode, cpu_state_t& state);
+void _62_mov_h_d_d8(uint8_t * opcode, cpu_state_t& state);
+void _63_mov_h_e_d8(uint8_t * opcode, cpu_state_t& state);
+void _64_mov_h_h_d8(uint8_t * opcode, cpu_state_t& state);
+void _65_mov_h_l_d8(uint8_t * opcode, cpu_state_t& state);
+void _66_mov_h_m_d8(uint8_t * opcode, cpu_state_t& state);
+void _67_mov_h_a_d8(uint8_t * opcode, cpu_state_t& state);
+
+void _68_mov_l_b_d8(uint8_t * opcode, cpu_state_t& state);
+void _69_mov_l_c_d8(uint8_t * opcode, cpu_state_t& state);
+void _6a_mov_l_d_d8(uint8_t * opcode, cpu_state_t& state);
+void _6b_mov_l_e_d8(uint8_t * opcode, cpu_state_t& state);
+void _6c_mov_l_h_d8(uint8_t * opcode, cpu_state_t& state);
+void _6d_mov_l_l_d8(uint8_t * opcode, cpu_state_t& state);
+void _6e_mov_l_m_d8(uint8_t * opcode, cpu_state_t& state);
+void _6f_mov_l_a_d8(uint8_t * opcode, cpu_state_t& state);
+
+void _70_mov_m_b_d8(uint8_t * opcode, cpu_state_t& state);
+void _71_mov_m_c_d8(uint8_t * opcode, cpu_state_t& state);
+void _72_mov_m_d_d8(uint8_t * opcode, cpu_state_t& state);
+void _73_mov_m_e_d8(uint8_t * opcode, cpu_state_t& state);
+void _74_mov_m_h_d8(uint8_t * opcode, cpu_state_t& state);
+void _75_mov_m_l_d8(uint8_t * opcode, cpu_state_t& state);
+void _77_mov_m_a_d8(uint8_t * opcode, cpu_state_t& state);
+
+void _78_mov_a_b_d8(uint8_t * opcode, cpu_state_t& state);
+void _79_mov_a_c_d8(uint8_t * opcode, cpu_state_t& state);
+void _7a_mov_a_d_d8(uint8_t * opcode, cpu_state_t& state);
+void _7b_mov_a_e_d8(uint8_t * opcode, cpu_state_t& state);
+void _7c_mov_a_h_d8(uint8_t * opcode, cpu_state_t& state);
+void _7d_mov_a_l_d8(uint8_t * opcode, cpu_state_t& state);
+void _7e_mov_a_m_d8(uint8_t * opcode, cpu_state_t& state);
+void _7f_mov_a_a_d8(uint8_t * opcode, cpu_state_t& state);
+// +++++++ END: 8 bits load/store instructions
 
 // +++++++ START: 16 bits load/store instructions
 void _11_lxi_d_d16(uint8_t * opcode, cpu_state_t& state);
@@ -65,7 +139,105 @@ void _31_lxi_sp_d16(uint8_t * opcode, cpu_state_t& state);
 // +++++++ END: 16 bits load/store instructions
 
 // +++++++ START: 8 bits arithmetic/logical instructions
+void _04_inr_b(uint8_t * opcode, cpu_state_t& state);
+void _0c_inr_c(uint8_t * opcode, cpu_state_t& state);
+void _14_inr_d(uint8_t * opcode, cpu_state_t& state);
+void _1c_inr_e(uint8_t * opcode, cpu_state_t& state);
+void _24_inr_h(uint8_t * opcode, cpu_state_t& state);
+void _2c_inr_l(uint8_t * opcode, cpu_state_t& state);
+void _34_inr_m(uint8_t * opcode, cpu_state_t& state);
+void _3c_inr_a(uint8_t * opcode, cpu_state_t& state);
+
 void _05_dcr_b(uint8_t * opcode, cpu_state_t& state);
+void _0d_dcr_c(uint8_t * opcode, cpu_state_t& state);
+void _15_dcr_d(uint8_t * opcode, cpu_state_t& state);
+void _1d_dcr_e(uint8_t * opcode, cpu_state_t& state);
+void _25_dcr_h(uint8_t * opcode, cpu_state_t& state);
+void _2d_dcr_l(uint8_t * opcode, cpu_state_t& state);
+void _35_dcr_m(uint8_t * opcode, cpu_state_t& state);
+void _3d_dcr_a(uint8_t * opcode, cpu_state_t& state);
+
+void _07_rlc(uint8_t * opcode, cpu_state_t& state);
+void _0f_rrc(uint8_t * opcode, cpu_state_t& state);
+void _17_ral(uint8_t * opcode, cpu_state_t& state);
+void _1f_rar(uint8_t * opcode, cpu_state_t& state);
+void _27_daa(uint8_t * opcode, cpu_state_t& state);
+void _2f_cma(uint8_t * opcode, cpu_state_t& state);
+void _37_stc(uint8_t * opcode, cpu_state_t& state);
+void _3f_cmc(uint8_t * opcode, cpu_state_t& state);
+
+void _80_add_b(uint8_t * opcode, cpu_state_t& state);
+void _81_add_c(uint8_t * opcode, cpu_state_t& state);
+void _82_add_d(uint8_t * opcode, cpu_state_t& state);
+void _83_add_e(uint8_t * opcode, cpu_state_t& state);
+void _84_add_h(uint8_t * opcode, cpu_state_t& state);
+void _85_add_l(uint8_t * opcode, cpu_state_t& state);
+void _86_add_m(uint8_t * opcode, cpu_state_t& state);
+void _87_add_a(uint8_t * opcode, cpu_state_t& state);
+
+void _88_adc_b(uint8_t * opcode, cpu_state_t& state);
+void _89_adc_c(uint8_t * opcode, cpu_state_t& state);
+void _8a_adc_d(uint8_t * opcode, cpu_state_t& state);
+void _8b_adc_e(uint8_t * opcode, cpu_state_t& state);
+void _8c_adc_h(uint8_t * opcode, cpu_state_t& state);
+void _8d_adc_l(uint8_t * opcode, cpu_state_t& state);
+void _8e_adc_m(uint8_t * opcode, cpu_state_t& state);
+void _8f_adc_a(uint8_t * opcode, cpu_state_t& state);
+
+void _90_sub_b(uint8_t * opcode, cpu_state_t& state);
+void _91_sub_c(uint8_t * opcode, cpu_state_t& state);
+void _92_sub_d(uint8_t * opcode, cpu_state_t& state);
+void _93_sub_e(uint8_t * opcode, cpu_state_t& state);
+void _94_sub_h(uint8_t * opcode, cpu_state_t& state);
+void _95_sub_l(uint8_t * opcode, cpu_state_t& state);
+void _96_sub_m(uint8_t * opcode, cpu_state_t& state);
+void _97_sub_a(uint8_t * opcode, cpu_state_t& state);
+
+void _98_sbb_b(uint8_t * opcode, cpu_state_t& state);
+void _99_sbb_c(uint8_t * opcode, cpu_state_t& state);
+void _9a_sbb_d(uint8_t * opcode, cpu_state_t& state);
+void _9b_sbb_e(uint8_t * opcode, cpu_state_t& state);
+void _9c_sbb_h(uint8_t * opcode, cpu_state_t& state);
+void _9d_sbb_l(uint8_t * opcode, cpu_state_t& state);
+void _9e_sbb_m(uint8_t * opcode, cpu_state_t& state);
+void _9f_sbb_a(uint8_t * opcode, cpu_state_t& state);
+
+void _a0_ana_b(uint8_t * opcode, cpu_state_t& state);
+void _a1_ana_c(uint8_t * opcode, cpu_state_t& state);
+void _a2_ana_d(uint8_t * opcode, cpu_state_t& state);
+void _a3_ana_e(uint8_t * opcode, cpu_state_t& state);
+void _a4_ana_h(uint8_t * opcode, cpu_state_t& state);
+void _a5_ana_l(uint8_t * opcode, cpu_state_t& state);
+void _a6_ana_m(uint8_t * opcode, cpu_state_t& state);
+void _a7_ana_a(uint8_t * opcode, cpu_state_t& state);
+
+void _a8_xra_b(uint8_t * opcode, cpu_state_t& state);
+void _a9_xra_c(uint8_t * opcode, cpu_state_t& state);
+void _aa_xra_d(uint8_t * opcode, cpu_state_t& state);
+void _ab_xra_e(uint8_t * opcode, cpu_state_t& state);
+void _ac_xra_h(uint8_t * opcode, cpu_state_t& state);
+void _ad_xra_l(uint8_t * opcode, cpu_state_t& state);
+void _ae_xra_m(uint8_t * opcode, cpu_state_t& state);
+void _af_xra_a(uint8_t * opcode, cpu_state_t& state);
+
+void _b0_ora_b(uint8_t * opcode, cpu_state_t& state);
+void _b1_ora_c(uint8_t * opcode, cpu_state_t& state);
+void _b2_ora_d(uint8_t * opcode, cpu_state_t& state);
+void _b3_ora_e(uint8_t * opcode, cpu_state_t& state);
+void _b4_ora_h(uint8_t * opcode, cpu_state_t& state);
+void _b5_ora_l(uint8_t * opcode, cpu_state_t& state);
+void _b6_ora_m(uint8_t * opcode, cpu_state_t& state);
+void _b7_ora_a(uint8_t * opcode, cpu_state_t& state);
+
+void _b8_cmp_b(uint8_t * opcode, cpu_state_t& state);
+void _b9_cmp_c(uint8_t * opcode, cpu_state_t& state);
+void _ba_cmp_d(uint8_t * opcode, cpu_state_t& state);
+void _bb_cmp_e(uint8_t * opcode, cpu_state_t& state);
+void _bc_cmp_h(uint8_t * opcode, cpu_state_t& state);
+void _bd_cmp_l(uint8_t * opcode, cpu_state_t& state);
+void _be_cmp_m(uint8_t * opcode, cpu_state_t& state);
+void _bf_cmp_a(uint8_t * opcode, cpu_state_t& state);
+
 void _c6_adi_d8(uint8_t * opcode, cpu_state_t& state);
 void _ce_aci_d8(uint8_t * opcode, cpu_state_t& state);
 void _d6_sui_d8(uint8_t * opcode, cpu_state_t& state);

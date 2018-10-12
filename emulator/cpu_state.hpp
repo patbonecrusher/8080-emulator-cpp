@@ -38,5 +38,18 @@ typedef struct _cpu_state {
     void logic_flags_a(uint16_t value);
     void flagZSP(uint8_t value);
     void write_mem(uint16_t address, uint8_t value);
+    uint8_t read_from_hl();
+    void write_to_hl(uint8_t value);
+
+    void arith_flags_a(uint16_t res);
+    void do_add_ops(uint16_t value);
+    void do_adc_ops(uint16_t value);
+    void do_sub_ops(uint16_t value);
+    void do_sbb_ops(uint16_t value);
+    void do_ana_ops(uint16_t value);
+    void do_xra_ops(uint16_t value);
+    void do_ora_ops(uint16_t value);
+    void do_cmp_ops(uint16_t value);
+
     friend ostream& operator<<(ostream& os, const _cpu_state& cs);
 } cpu_state_t;

@@ -783,11 +783,11 @@ State8080* Init8080(void)
 #include <unistd.h>
 
 int main (int argc, char**argv) {
-  termios oldt;
-  tcgetattr(STDIN_FILENO, &oldt);
-  termios newt = oldt;
-  newt.c_lflag &= ~ECHO;
-  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+  // termios oldt;
+  // tcgetattr(STDIN_FILENO, &oldt);
+  // termios newt = oldt;
+  // newt.c_lflag &= ~ECHO;
+  // tcsetattr(STDIN_FILENO, TCSANOW, &newt);
 
   // auto file = string(argv[1]);
   // auto fileContent = load_file(file);
@@ -803,14 +803,22 @@ int main (int argc, char**argv) {
   core.cpu_state.pc = offset;
   ReadFileIntoBufferAt(core.memory, fileName, offset);
 
+// make sure we use the system one, not the brew one.
+  system("/bin/stty raw -echo"); 
   char c = 'n';
-  while (c != 's') {
+  do {
     core.next();
-    system("stty raw"); 
+    cout << "\r";
+
     c = getchar();
-    system("stty cooked"); 
-  }
-  newt.c_lflag |= ECHO;  
-  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-  // return core.run();
+    if (c == 'g') {
+      system("/bin/stty -raw");
+      core.run();
+    }
+  } while (c != 's');
+
+  // system("stty cooked"); 
+  // newt.c_lflag |= ECHO;  
+  // tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+  // // return core.run();
 }
