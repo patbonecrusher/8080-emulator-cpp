@@ -47,6 +47,13 @@ extern void _fb_ei(uint8_t * opcode, cpu_state_t& state) { state.int_enable = tr
 // +++++++ END: Misc/Control instructions
 
 // +++++++ Jump/Call instructions
+extern void _23_inx_h_d8(uint8_t * opcode, cpu_state_t& state) {
+  // HL<-HL+1
+  state.l++;
+  if (0 == state.l) state.h++;
+}
+
+
 extern void _c0_rnz(uint8_t * opcode, cpu_state_t& state) {
   if (!state.cc.z) {
     state.pc = (state.memory[state.sp+1]<<8 | state.memory[state.sp]); 
@@ -271,23 +278,62 @@ extern void _ff_rst_7(uint8_t * opcode, cpu_state_t& state) {exit(1);}
 // +++++++ END: Jump/Calls instructions
 
 // +++++++ START: 8 bits load/store instructions
+
+void _02_stax_b_d8(uint8_t * opcode, cpu_state_t& state) {
+  // (BC)<-A
+  uint16_t bc = (state.b << 8) | state.c;
+  state.write_mem(bc, state.a);
+}
 extern void _06_mvi_b_d8(uint8_t * opcode, cpu_state_t& state) {
   // B<-byte2
   state.b = opcode[0];
 }
+void _0a_ldax_b_d8(uint8_t * opcode, cpu_state_t& state) {
+  // A<-(BC)
+  uint16_t bc = (state.b << 8) | state.c;
+  state.a = state.memory[bc];
+}
+void _0e_mvi_d_d8(uint8_t * opcode, cpu_state_t& state) {
+  // C<-byte2
+  state.c = opcode[0];
+}
 
+void _12_stax_d_d8(uint8_t * opcode, cpu_state_t& state) {
+  // (DE)<-A
+  uint16_t de = (state.d << 8) | state.e;
+  state.write_mem(de, state.a);
+}
+void _16_mvi_d_d8(uint8_t * opcode, cpu_state_t& state) {
+  // D<-byte2
+  state.d = opcode[0];
+}
 void _1a_ldax_d_d8(uint8_t * opcode, cpu_state_t& state) {
   // A<-(DE)
   uint16_t offset=(state.d<<8) | state.e;
   state.a = state.memory[offset];
 }
 
-extern void _23_inx_h_d8(uint8_t * opcode, cpu_state_t& state) {
-  // HL<-HL+1
-  state.l++;
-  if (0 == state.l) state.h++;
+void _1e_mvi_e_d8(uint8_t * opcode, cpu_state_t& state) {
+  // E<-byte2
+  state.e = opcode[0];
 }
 
+void _26_mvi_h_d8(uint8_t * opcode, cpu_state_t& state) { state.h = opcode[0]; }
+void _2e_mvi_l_d8(uint8_t * opcode, cpu_state_t& state) { state.l = opcode[0]; }
+
+void _32_sta_a16_d16(uint8_t * opcode, cpu_state_t& state) {
+  // (adr)<-A
+  uint16_t addr = OPCODE_TO16BIT(opcode);
+  state.write_mem(addr, state.a);
+}
+void _36_mvi_m_d8(uint8_t * opcode, cpu_state_t& state) {
+  uint16_t addr = opcode[0];
+  state.write_to_hl(opcode[0]);
+}
+void _3a_lda_a16_d16(uint8_t * opcode, cpu_state_t& state) {
+  uint16_t addr = OPCODE_TO16BIT(opcode);
+  state.a = state.memory[addr];
+}
 extern void _3e_mvi_a_d8(uint8_t * opcode, cpu_state_t& state) {
   // A<-byte2
   state.a = opcode[0];
@@ -415,12 +461,38 @@ void _35_dcr_m(uint8_t * opcode, cpu_state_t& state) {
 }
 void _3d_dcr_a(uint8_t * opcode, cpu_state_t& state) { state.a -= 1; state.flagZSP(state.a); }
 
-
-void _05_dcr_b(uint8_t * opcode, cpu_state_t& state) {
-  // B<-B-1
-  state.b -= 1;
-  state.flagZSP(state.b);
+void _07_rlc(uint8_t * opcode, cpu_state_t& state) {
+  uint8_t x = state.a;
+  state.a = ((x & 0x80) >> 7) | (x << 1);
+  state.cc.cy = (0x80 == (x&0x80));
 }
+void _0f_rrc(uint8_t * opcode, cpu_state_t& state) {
+  uint8_t x = state.a;
+  state.a = ((x & 1) << 7) | (x >> 1);
+  state.cc.cy = (1 == (x&1));
+}
+void _17_ral(uint8_t * opcode, cpu_state_t& state) {
+  uint8_t x = state.a;
+  state.a = state.cc.cy  | (x << 1);
+  state.cc.cy = (0x80 == (x&0x80));
+}
+void _1f_rar(uint8_t * opcode, cpu_state_t& state) {
+  uint8_t x = state.a;
+  state.a = (state.cc.cy << 7) | (x >> 1);
+  state.cc.cy = (1 == (x&1));
+}
+void _27_daa(uint8_t * opcode, cpu_state_t& state) {
+  if ((state.a &0xf) > 9) state.a += 6;
+  if ((state.a&0xf0) > 0x90)
+  {
+      uint16_t res = (uint16_t) state.a + 0x60;
+      state.a = res & 0xff;
+      state.arith_flags_a(res);
+  }
+}
+void _2f_cma(uint8_t * opcode, cpu_state_t& state) { state.a = ~state.a; }
+void _37_stc(uint8_t * opcode, cpu_state_t& state) { state.cc.cy = 1; }
+void _3f_cmc(uint8_t * opcode, cpu_state_t& state) { state.cc.cy = 0; } // state->cc.cy = !state->cc.cy;}
 
 void _80_add_b(uint8_t * opcode, cpu_state_t& state) { state.do_add_ops(state.b); }
 void _81_add_c(uint8_t * opcode, cpu_state_t& state) { state.do_add_ops(state.c); }

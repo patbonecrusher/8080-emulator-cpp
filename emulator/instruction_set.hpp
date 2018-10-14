@@ -56,8 +56,22 @@ void _23_inx_h_d8(uint8_t * opcode, cpu_state_t& state);
 // +++++++ END: Misc instructions
 
 // +++++++ START: 8 bits load/store instructions
+void _02_stax_b_d8(uint8_t * opcode, cpu_state_t& state);
 void _06_mvi_b_d8(uint8_t * opcode, cpu_state_t& state);
+void _0a_ldax_b_d8(uint8_t * opcode, cpu_state_t& state);
+void _0e_mvi_d_d8(uint8_t * opcode, cpu_state_t& state);
+
+void _12_stax_d_d8(uint8_t * opcode, cpu_state_t& state);
+void _16_mvi_d_d8(uint8_t * opcode, cpu_state_t& state);
 void _1a_ldax_d_d8(uint8_t * opcode, cpu_state_t& state);
+void _1e_mvi_e_d8(uint8_t * opcode, cpu_state_t& state);
+
+void _26_mvi_h_d8(uint8_t * opcode, cpu_state_t& state);
+void _2e_mvi_l_d8(uint8_t * opcode, cpu_state_t& state);
+
+void _32_sta_a16_d16(uint8_t * opcode, cpu_state_t& state);
+void _36_mvi_m_d8(uint8_t * opcode, cpu_state_t& state);
+void _3a_lda_a16_d16(uint8_t * opcode, cpu_state_t& state);
 void _3e_mvi_a_d8(uint8_t * opcode, cpu_state_t& state);
 
 void _40_mov_b_b_d8(uint8_t * opcode, cpu_state_t& state);

@@ -127,22 +127,22 @@ void _cpu_state::do_sbb_ops(uint16_t value) {
 }
 
 void _cpu_state::do_ana_ops(uint16_t value) {
-  uint16_t res = (uint16_t) a & value;
-  this->arith_flags_a(res);
+  a = (uint16_t) a & value;
+  this->logic_flags_a(a);
 }
 
 void _cpu_state::do_xra_ops(uint16_t value) {
-  uint16_t res = (uint16_t) a ^ value;
-  this->arith_flags_a(res);
+  a = (uint16_t) a ^ value;
+  this->logic_flags_a(a);
 }
 
 void _cpu_state::do_ora_ops(uint16_t value) {
-  uint16_t res = (uint16_t) a | value;
-  this->arith_flags_a(res);
+  a = (uint16_t) a | value;
+  this->logic_flags_a(a);
 }
 
 void _cpu_state::do_cmp_ops(uint16_t value) {
-  uint16_t res = (uint16_t) a - value;
+  int16_t res = (uint16_t) a - value;
   this->arith_flags_a(res);
 }
 

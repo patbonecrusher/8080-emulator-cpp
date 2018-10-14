@@ -115,9 +115,23 @@ void cpu::load_instruction_set() {
 
 
     // +++++++ START: 8 bits load/store instructions
-    ADD_INS(0x06, "LD B"        , 7 , 2, _06_mvi_b_d8);
-    ADD_INS(0x1a, "LD A,(DE)"   , 7 , 1, _1a_ldax_d_d8);
-    ADD_INS(0x3e, "MVI L"       , 7 , 2, _3e_mvi_a_d8);
+    ADD_INS(0x02, "STAX B"      , 7 , 1, _02_stax_b_d8);
+    ADD_INS(0x06, "MVI B"       , 7 , 2, _06_mvi_b_d8);
+    ADD_INS(0x0a, "LDAX B"      , 7 , 1, _0a_ldax_b_d8);
+    ADD_INS(0x0e, "MVI C"       , 7 , 2, _0e_mvi_d_d8);
+
+    ADD_INS(0x12, "STAX D"      , 7 , 1, _12_stax_d_d8);
+    ADD_INS(0x16, "MVI D"       , 7 , 2, _16_mvi_d_d8);
+    ADD_INS(0x1a, "LDAX D"      , 7 , 1, _1a_ldax_d_d8);
+    ADD_INS(0x1e, "MVI E"       , 7 , 2, _1e_mvi_e_d8);
+
+    ADD_INS(0x26, "MVI H"       , 7 , 2, _26_mvi_h_d8);
+    ADD_INS(0x2e, "MVI L"       , 7 , 2, _2e_mvi_l_d8);
+
+    ADD_INS(0x32, "STA A16"     , 13, 3, _32_sta_a16_d16);
+    ADD_INS(0x36, "MVI M"       , 10, 2, _36_mvi_m_d8);
+    ADD_INS(0x3a, "LDA A16"     , 13, 3, _3a_lda_a16_d16);
+    ADD_INS(0x3e, "MVI A"       , 7 , 2, _3e_mvi_a_d8);
 
     ADD_INS(0x40, "MOV B,B"     , 5 , 1, _40_mov_b_b_d8);
     ADD_INS(0x41, "MOV B,C"     , 5 , 1, _41_mov_b_c_d8);
@@ -204,8 +218,32 @@ void cpu::load_instruction_set() {
     // +++++++ END: 16 bits arithmetic/logical instructions
 
     // +++++++ START: 8 bits arithmetic/logical instructions
+    ADD_INS(0x04, "INR B", 5, 1, _04_inr_b);
+    ADD_INS(0x0c, "INR C", 5, 1, _0c_inr_c);
+    ADD_INS(0x14, "INR D", 5, 1, _14_inr_d);
+    ADD_INS(0x1c, "INR E", 5, 1, _1c_inr_e);
+    ADD_INS(0x24, "INR H", 5, 1, _24_inr_h);
+    ADD_INS(0x2c, "INR L", 5, 1, _2c_inr_l);
+    ADD_INS(0x34, "INR M", 5, 1, _34_inr_m);
     ADD_INS(0x3c, "INR A", 5, 1, _3c_inr_a);
-    ADD_INS(0x05, "DEC B", 5, 1, _05_dcr_b);
+
+    ADD_INS(0x05, "DCR B", 5, 1, _05_dcr_b);
+    ADD_INS(0x0d, "DCR C", 5, 1, _0d_dcr_c);
+    ADD_INS(0x15, "DCR D", 5, 1, _15_dcr_d);
+    ADD_INS(0x1d, "DCR E", 5, 1, _1d_dcr_e);
+    ADD_INS(0x25, "DCR H", 5, 1, _25_dcr_h);
+    ADD_INS(0x2d, "DCR L", 5, 1, _2d_dcr_l);
+    ADD_INS(0x35, "DCR M", 5, 1, _35_dcr_m);
+    ADD_INS(0x3d, "DCR A", 5, 1, _3d_dcr_a);
+
+    ADD_INS(0x07, "RLC", 5, 1, _07_rlc);
+    ADD_INS(0x0f, "RRC", 5, 1, _0f_rrc);
+    ADD_INS(0x17, "RAL", 5, 1, _17_ral);
+    ADD_INS(0x1f, "RAR", 5, 1, _1f_rar);
+    ADD_INS(0x27, "DAA", 5, 1, _27_daa);
+    ADD_INS(0x2f, "CMA", 5, 1, _2f_cma);
+    ADD_INS(0x37, "STC", 5, 1, _37_stc);
+    ADD_INS(0x3f, "CMC", 5, 1, _3f_cmc);
 
     ADD_INS(0x80, "ADD B"       , 4 , 1, _80_add_b);
     ADD_INS(0x81, "ADD C"       , 4 , 1, _81_add_c);
