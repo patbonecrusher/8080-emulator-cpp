@@ -147,6 +147,18 @@ void _cpu_state::do_cmp_ops(uint16_t value) {
 }
 
 
+void _cpu_state::stack_push(uint8_t high, uint8_t low) {
+    write_mem(sp-1, high);
+    write_mem(sp-2, low);
+    sp -= 2;
+}
+
+void _cpu_state::stack_pop(uint8_t *high, uint8_t *low) {
+    *low = memory[sp];
+    *high = memory[sp+1];
+    sp += 2;
+}
+
 ostream& operator<<(ostream& os, const _cpu_state& cs) {
     os  << cs.cc;
     os  << " A $" << hex << setw(2) << setfill('0') << right << (int) cs.a

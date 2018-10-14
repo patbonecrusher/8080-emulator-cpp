@@ -51,5 +51,8 @@ typedef struct _cpu_state {
     void do_ora_ops(uint16_t value);
     void do_cmp_ops(uint16_t value);
 
+    void stack_push(uint8_t high, uint8_t low);
+    void stack_pop(uint8_t *high, uint8_t *low);
+
     friend ostream& operator<<(ostream& os, const _cpu_state& cs);
 } cpu_state_t;

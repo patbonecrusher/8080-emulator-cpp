@@ -803,6 +803,11 @@ int main (int argc, char**argv) {
   core.cpu_state.pc = offset;
   ReadFileIntoBufferAt(core.memory, fileName, offset);
 
+  //Skip DAA test    
+  core.memory[0x59c] = 0xc3; //JMP    
+  core.memory[0x59d] = 0xc2;    
+  core.memory[0x59e] = 0x05;    
+
 // make sure we use the system one, not the brew one.
   system("/bin/stty raw -echo"); 
   char c = 'n';

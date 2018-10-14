@@ -46,6 +46,15 @@ uint8_t _instruction::dissassemble(uint8_t *data, uint16_t pc) {
     return op_size;
 }
 
+typedef struct _op_info {
+    uint8_t opcode;
+    uint8_t next_opcode;
+    union {
+        uint8_t val_1_byte;
+        uint16_t val_2_bytes;
+    };
+} op_info;
+
 uint8_t _instruction::execute(uint8_t * data, cpu_state_t &state) {
     // Increment the pc automatically.  If an instruction changes it, that
     // is fine.

@@ -14,7 +14,7 @@ void _c7_rst_0(uint8_t * opcode, cpu_state_t& state);
 void _c8_rz(uint8_t * opcode, cpu_state_t& state);
 void _c9_ret(uint8_t * opcode, cpu_state_t& state);
 void _ca_jz_a16(uint8_t * opcode, cpu_state_t& state);
-void _cb_jmp_a16_alt(uint8_t * opcode, cpu_state_t& state);
+// void _cb_jmp_a16_alt(uint8_t * opcode, cpu_state_t& state);
 void _cc_cz_a16(uint8_t * opcode, cpu_state_t& state);
 void _cd_call_a16(uint8_t * opcode, cpu_state_t& state);
 void _cf_rst_1(uint8_t * opcode, cpu_state_t& state);
@@ -24,10 +24,10 @@ void _d2_jnc_a16(uint8_t * opcode, cpu_state_t& state);
 void _d4_cnc_a16(uint8_t * opcode, cpu_state_t& state);
 void _d7_rst_2(uint8_t * opcode, cpu_state_t& state);
 void _d8_rc(uint8_t * opcode, cpu_state_t& state);
-void _d9_ret_alt(uint8_t * opcode, cpu_state_t& state);
+//void _d9_ret_alt(uint8_t * opcode, cpu_state_t& state);
 void _da_jc_a16(uint8_t * opcode, cpu_state_t& state);
 void _dc_cc_a16(uint8_t * opcode, cpu_state_t& state);
-void _dd_call_a16_alt(uint8_t * opcode, cpu_state_t& state);
+// void _dd_call_a16_alt(uint8_t * opcode, cpu_state_t& state);
 void _df_rst_3(uint8_t * opcode, cpu_state_t& state);
 
 void _e0_rpo(uint8_t * opcode, cpu_state_t& state);
@@ -38,7 +38,7 @@ void _e8_rpe(uint8_t * opcode, cpu_state_t& state);
 void _e9_phcl(uint8_t * opcode, cpu_state_t& state);
 void _ea_jpe_a16(uint8_t * opcode, cpu_state_t& state);
 void _ec_cpe_a16(uint8_t * opcode, cpu_state_t& state);
-void _ed_call_a16_alt(uint8_t * opcode, cpu_state_t& state);
+// void _ed_call_a16_alt(uint8_t * opcode, cpu_state_t& state);
 void _ef_rst_5(uint8_t * opcode, cpu_state_t& state);
 
 void _f0_rp(uint8_t * opcode, cpu_state_t& state);
@@ -48,7 +48,7 @@ void _f7_rst_6(uint8_t * opcode, cpu_state_t& state);
 void _f8_rm(uint8_t * opcode, cpu_state_t& state);
 void _fa_jm_a16(uint8_t * opcode, cpu_state_t& state);
 void _fc_cm_a16(uint8_t * opcode, cpu_state_t& state);
-void _fd_call_a16_alt(uint8_t * opcode, cpu_state_t& state);
+// void _fd_call_a16_alt(uint8_t * opcode, cpu_state_t& state);
 void _ff_rst_7(uint8_t * opcode, cpu_state_t& state);
 
 // +++++++ START: Misc instructions
@@ -147,9 +147,26 @@ void _7f_mov_a_a_d8(uint8_t * opcode, cpu_state_t& state);
 // +++++++ END: 8 bits load/store instructions
 
 // +++++++ START: 16 bits load/store instructions
+void _01_lxi_b_d16(uint8_t * opcode, cpu_state_t& state);
 void _11_lxi_d_d16(uint8_t * opcode, cpu_state_t& state);
 void _21_lxi_h_d16(uint8_t * opcode, cpu_state_t& state);
+void _22_shld_a16(uint8_t * opcode, cpu_state_t& state);
+void _2a_lhld_a16(uint8_t * opcode, cpu_state_t& state);
 void _31_lxi_sp_d16(uint8_t * opcode, cpu_state_t& state);
+
+void _c1_pop_b_d16(uint8_t * opcode, cpu_state_t& state);
+void _c5_push_b_d16(uint8_t * opcode, cpu_state_t& state);
+void _d1_pop_d_d16(uint8_t * opcode, cpu_state_t& state);
+void _d5_push_d_d16(uint8_t * opcode, cpu_state_t& state);
+
+void _e1_pop_h_d16(uint8_t * opcode, cpu_state_t& state);
+void _e3_xhtl_d16(uint8_t * opcode, cpu_state_t& state);
+void _e5_push_h_d16(uint8_t * opcode, cpu_state_t& state);
+void _eb_xchg_d16(uint8_t * opcode, cpu_state_t& state);
+
+void _f1_pop_psw_d16(uint8_t * opcode, cpu_state_t& state);
+void _f5_push_psw_d16(uint8_t * opcode, cpu_state_t& state);
+void _f9_sphl_d16(uint8_t * opcode, cpu_state_t& state);
 // +++++++ END: 16 bits load/store instructions
 
 // +++++++ START: 8 bits arithmetic/logical instructions
@@ -263,5 +280,16 @@ void _fe_cpi_d8(uint8_t * opcode, cpu_state_t& state);
 // +++++++ END: 8 bits arithmetic/logical instructions
 
 // +++++++ START: 16 bits arithmetic/logical instructions
+void _03_inx_b_d16(uint8_t * opcode, cpu_state_t& state);
+void _09_dad_b_d16(uint8_t * opcode, cpu_state_t& state);
+void _0b_dcx_b_d16(uint8_t * opcode, cpu_state_t& state);
 void _13_inx_d_d16(uint8_t * opcode, cpu_state_t& state);
+void _19_dad_d_d16(uint8_t * opcode, cpu_state_t& state);
+void _1b_dcx_d_d16(uint8_t * opcode, cpu_state_t& state);
+void _23_inx_h_d16(uint8_t * opcode, cpu_state_t& state);
+void _29_dad_h_d16(uint8_t * opcode, cpu_state_t& state);
+void _2b_dcx_h_d16(uint8_t * opcode, cpu_state_t& state);
+void _33_inx_sp_d16(uint8_t * opcode, cpu_state_t& state);
+void _39_dad_sp_d16(uint8_t * opcode, cpu_state_t& state);
+void _3b_dcx_sp_d16(uint8_t * opcode, cpu_state_t& state);
 // +++++++ END: 16 bits arithmetic/logical instructions

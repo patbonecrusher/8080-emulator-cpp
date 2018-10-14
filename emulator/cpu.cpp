@@ -70,7 +70,7 @@ void cpu::load_instruction_set() {
     ADD_INS(0xc8, "RZ"      , 11, 1, _c8_rz);
     ADD_INS(0xc9, "RET"     , 10, 1, _c9_ret);
     ADD_INS(0xca, "JZ"      , 10, 3, _ca_jz_a16);
-    ADD_INS(0xcb, "*JMP"    , 10, 3, _cb_jmp_a16_alt);
+    // ADD_INS(0xcb, "*JMP"    , 10, 3, _cb_jmp_a16_alt);
     ADD_INS(0xcc, "CZ"      , 17, 3, _cc_cz_a16);
     ADD_INS(0xcd, "CALL"    , 17, 3, _cd_call_a16);
     ADD_INS(0xcf, "RST_1"   , 11, 1, _cf_rst_1);
@@ -80,10 +80,10 @@ void cpu::load_instruction_set() {
     ADD_INS(0xd4, "CNC"     , 17, 3, _d4_cnc_a16);
     ADD_INS(0xd7, "RST_2"   , 11, 1, _d7_rst_2);
     ADD_INS(0xd8, "RC"      , 11, 1, _d8_rc);
-    ADD_INS(0xd9, "*RET"    , 10, 1, _d9_ret_alt);
+    // ADD_INS(0xd9, "*RET"    , 10, 1, _d9_ret_alt);
     ADD_INS(0xda, "JC"      , 10, 3, _da_jc_a16);
     ADD_INS(0xdc, "CC"      , 17, 3, _dc_cc_a16);
-    ADD_INS(0xdd, "*CALL"   , 17, 3, _dd_call_a16_alt);
+    // ADD_INS(0xdd, "*CALL"   , 17, 3, _dd_call_a16_alt);
     ADD_INS(0xdf, "RST_3"   , 11, 1, _df_rst_3);
 
     ADD_INS(0xe0, "RPO"     , 11, 1, _e0_rpo);
@@ -94,7 +94,7 @@ void cpu::load_instruction_set() {
     ADD_INS(0xe9, "PHCL"    , 10, 1, _e9_phcl);
     ADD_INS(0xea, "JPE"     , 10, 3, _ea_jpe_a16);
     ADD_INS(0xec, "CPE"     , 17, 3, _ec_cpe_a16);
-    ADD_INS(0xed, "*CALL"   , 17, 3, _ed_call_a16_alt);
+    // ADD_INS(0xed, "*CALL"   , 17, 3, _ed_call_a16_alt);
     ADD_INS(0xef, "RST_5"   , 11, 1, _ef_rst_5);
 
     ADD_INS(0xf0, "RP"      , 11, 1, _f0_rp);
@@ -104,7 +104,7 @@ void cpu::load_instruction_set() {
     ADD_INS(0xf8, "RM"      , 11, 1, _f8_rm);
     ADD_INS(0xfa, "JM"      , 10, 3, _fa_jm_a16);
     ADD_INS(0xfc, "CM"      , 17, 3, _fc_cm_a16);
-    ADD_INS(0xfd, "*CALL"   , 17, 3, _fd_call_a16_alt);
+    // ADD_INS(0xfd, "*CALL"   , 17, 3, _fd_call_a16_alt);
     ADD_INS(0xff, "RST_7"   , 11, 1, _ff_rst_7);
 
     // +++++++ Jump/Calls instructions
@@ -208,14 +208,28 @@ void cpu::load_instruction_set() {
     // +++++++ END: 16 bits load/store instructions
 
     // +++++++ START: 16 bits load/store instructions
-    ADD_INS(0x11, "LD DE", 10, 3, _11_lxi_d_d16);
-    ADD_INS(0x21, "LD HL", 10, 3, _21_lxi_h_d16);
+    ADD_INS(0x01, "LXI B", 10, 3, _01_lxi_b_d16);
+    ADD_INS(0x11, "LXI D", 10, 3, _11_lxi_d_d16);
+    ADD_INS(0x21, "LXI H", 10, 3, _21_lxi_h_d16);
+    ADD_INS(0x22, "SHLD" , 16, 3, _22_shld_a16);
+    ADD_INS(0x2a, "LHLD" , 16, 3, _2a_lhld_a16);
     ADD_INS(0x31, "LD SP", 10, 3, _31_lxi_sp_d16);
-    // +++++++ END: 16 bits load/store instructions
 
-    // +++++++ START: 16 bits arithmetic/logical instructions
-    ADD_INS(0x13, "INC DE", 5, 1, _11_lxi_d_d16);
-    // +++++++ END: 16 bits arithmetic/logical instructions
+    ADD_INS(0xC1, "POP B", 10, 1, _c1_pop_b_d16);
+    ADD_INS(0xC5, "PUSH B", 11, 1, _c5_push_b_d16);
+
+    ADD_INS(0xD1, "POP D", 10, 1, _d1_pop_d_d16);
+    ADD_INS(0xD5, "PUSH D", 11, 1, _d5_push_d_d16);
+
+    ADD_INS(0xE1, "POP H", 10, 1, _e1_pop_h_d16);
+    ADD_INS(0xE3, "XTHL" , 10, 1, _e3_xhtl_d16);
+    ADD_INS(0xE5, "PUSH H", 11, 1, _e5_push_h_d16);
+    ADD_INS(0xEB, "XCHG", 5, 1, _eb_xchg_d16);
+
+    ADD_INS(0xF1, "POP PSW", 10, 1, _f1_pop_psw_d16);
+    ADD_INS(0xF5, "PUSH PSW", 11, 1, _f5_push_psw_d16);
+    ADD_INS(0xF9, "SPHL", 5, 1, _f9_sphl_d16);
+    // +++++++ END: 16 bits load/store instructions
 
     // +++++++ START: 8 bits arithmetic/logical instructions
     ADD_INS(0x04, "INR B", 5, 1, _04_inr_b);
@@ -327,7 +341,19 @@ void cpu::load_instruction_set() {
     ADD_INS(0xfe, "CPI", 7, 2, _fe_cpi_d8);
     // +++++++ END: 8 bits arithmetic/logical instructions
 
-    // this->instructions[0x01] = instruction(0x01, nop0, "LXI    B,#$", 2);
-    // this->instructions[0xc3] = instruction(0xc3, jmp , "JMP       $", 2);
-    // this->instructions[0xfe] = instruction(0xfe, fe_cpi, "CPI      #$", 2);
+    // +++++++ START: 16 bits arithmetic/logical instructions
+    ADD_INS(0x03, "INX B", 5, 1, _03_inx_b_d16);
+    ADD_INS(0x09, "DAD B", 5, 1, _09_dad_b_d16);
+    ADD_INS(0x0b, "DCX B", 5, 1, _0b_dcx_b_d16);
+    ADD_INS(0x13, "INX D", 5, 1, _13_inx_d_d16);
+    ADD_INS(0x19, "DAD D", 5, 1, _19_dad_d_d16);
+    ADD_INS(0x1b, "DCX D", 5, 1, _1b_dcx_d_d16);
+    ADD_INS(0x23, "INX H", 5, 1, _23_inx_h_d16);
+    ADD_INS(0x29, "DAD H", 5, 1, _29_dad_h_d16);
+    ADD_INS(0x2b, "DCX H", 5, 1, _2b_dcx_h_d16);
+    ADD_INS(0x33, "INC SP", 5, 1, _33_inx_sp_d16);
+    ADD_INS(0x39, "DAD SP", 5, 1, _39_dad_sp_d16);
+    ADD_INS(0x3b, "DCX SP", 5, 1, _3b_dcx_sp_d16);
+    // +++++++ END: 16 bits arithmetic/logical instructions
+
 }
