@@ -1,4 +1,5 @@
 #include <iomanip>
+#include <system_error>
 
 #include "instruction_set.hpp"
 #include "cpu.hpp"
@@ -32,6 +33,10 @@ void cpu::next() {
     cout << " " << cpu_state << endl;
 }
 
+void cpu::halt(uint8_t * opcode, cpu_state_t& state) {
+    throw std::system_error(EFAULT, std::generic_category());
+}
+
 void unimpl(uint8_t * opcode, cpu_state_t& state) {
     cout << "error: unimplement instruction" << endl;
     exit(1);
@@ -54,7 +59,6 @@ void cpu::load_instruction_set() {
     ADD_INS(0x28, "NOP", 4);
     ADD_INS(0x38, "NOP", 4);
 
-    ADD_INS(0x76, "HLT", 7);
     ADD_INS(0xd3, "OUT", 10, 2, nullptr);
     ADD_INS(0xdb, "IN" , 10, 2, nullptr);
     ADD_INS(0xf3, "DI" , 4 , 1, _f3_di );
@@ -193,7 +197,10 @@ void cpu::load_instruction_set() {
     ADD_INS(0x73, "MOV M,E"     , 7 , 1, _73_mov_m_e_d8);
     ADD_INS(0x74, "MOV M,H"     , 7 , 1, _74_mov_m_h_d8);
     ADD_INS(0x75, "MOV M,L"     , 7 , 1, _75_mov_m_l_d8);
-    ADD_INS(0x76, "HALT"        , 7 , 1);
+    ADD_INS(0x76, "HALT", 7, 1, [this](uint8_t * opcode, cpu_state_t& state) {
+        printf("FUCK YOU!!!\n");
+        throw std::system_error(EFAULT, std::generic_category());
+    });
     ADD_INS(0x77, "MOV M,A"     , 7 , 1, _77_mov_m_a_d8);
 
     ADD_INS(0x78, "MOV A,B"     , 5 , 1, _78_mov_a_b_d8);
@@ -356,4 +363,9 @@ void cpu::load_instruction_set() {
     ADD_INS(0x3b, "DCX SP", 5, 1, _3b_dcx_sp_d16);
     // +++++++ END: 16 bits arithmetic/logical instructions
 
+    for (int i=0; i<255; ++i) {
+        if (this->instructions[i].name == "ERROR") {
+            std::cout << hex << setfill('0') << setw(2) << (int) this->instructions[i].id << " - " << this->instructions[i].name << std::endl;
+        }
+    }
 }

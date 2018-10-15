@@ -16,6 +16,7 @@ class cpu {
         
         // return a copy of the state.
         void next();
+        void halt(uint8_t * opcode, cpu_state_t& state);
 
     private:
 

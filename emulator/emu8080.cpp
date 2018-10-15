@@ -797,6 +797,7 @@ int main (int argc, char**argv) {
   auto fileName = argv[1];
   int offset = strtol(argv[2], NULL, 16);
 	int done = 0;
+  system("/bin/stty -raw");
 
   auto core = cpu();
   core.load_instruction_set();
@@ -808,19 +809,26 @@ int main (int argc, char**argv) {
   core.memory[0x59d] = 0xc2;    
   core.memory[0x59e] = 0x05;    
 
+  core.memory[0x06a1] = 0x76;
+
 // make sure we use the system one, not the brew one.
   system("/bin/stty raw -echo"); 
-  char c = 'n';
-  do {
-    core.next();
-    cout << "\r";
+  try {
+    char c = 'n';
+    do {
+      core.next();
+      cout << "\r";
 
-    c = getchar();
-    if (c == 'g') {
-      system("/bin/stty -raw");
-      core.run();
-    }
-  } while (c != 's');
+      c = getchar();
+      if (c == 'g') {
+        system("/bin/stty -raw");
+        core.run();
+      }
+    } while (c != 's');
+  } catch (system_error& err) {
+    cout << "Systen was halted" << endl;
+    system("stty cooked"); 
+  }
 
   // system("stty cooked"); 
   // newt.c_lflag |= ECHO;  
