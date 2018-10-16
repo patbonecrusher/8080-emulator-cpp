@@ -59,8 +59,13 @@ void cpu::load_instruction_set() {
     ADD_INS(0x28, "NOP", 4);
     ADD_INS(0x38, "NOP", 4);
 
-    ADD_INS(0xd3, "OUT", 10, 2, nullptr);
-    ADD_INS(0xdb, "IN" , 10, 2, nullptr);
+    ADD_INS(0x76, "HALT", 7, 1, [this](uint8_t * opcode, cpu_state_t& state) {
+        throw std::system_error(EFAULT, std::generic_category());
+    });
+
+
+    ADD_INS(0xd3, "OUT", 10, 2, unimpl);
+    ADD_INS(0xdb, "IN" , 10, 2, unimpl);
     ADD_INS(0xf3, "DI" , 4 , 1, _f3_di );
     ADD_INS(0xfb, "EI" , 4 , 1, _fb_ei );
     // +++++++ END: Misc/Control instructions
@@ -74,7 +79,7 @@ void cpu::load_instruction_set() {
     ADD_INS(0xc8, "RZ"      , 11, 1, _c8_rz);
     ADD_INS(0xc9, "RET"     , 10, 1, _c9_ret);
     ADD_INS(0xca, "JZ"      , 10, 3, _ca_jz_a16);
-    // ADD_INS(0xcb, "*JMP"    , 10, 3, _cb_jmp_a16_alt);
+    ADD_INS(0xcb, "*JMP"    , 10, 3, unimpl);
     ADD_INS(0xcc, "CZ"      , 17, 3, _cc_cz_a16);
     ADD_INS(0xcd, "CALL"    , 17, 3, _cd_call_a16);
     ADD_INS(0xcf, "RST_1"   , 11, 1, _cf_rst_1);
@@ -84,10 +89,10 @@ void cpu::load_instruction_set() {
     ADD_INS(0xd4, "CNC"     , 17, 3, _d4_cnc_a16);
     ADD_INS(0xd7, "RST_2"   , 11, 1, _d7_rst_2);
     ADD_INS(0xd8, "RC"      , 11, 1, _d8_rc);
-    // ADD_INS(0xd9, "*RET"    , 10, 1, _d9_ret_alt);
+    ADD_INS(0xd9, "*RET"    , 10, 1, unimpl);
     ADD_INS(0xda, "JC"      , 10, 3, _da_jc_a16);
     ADD_INS(0xdc, "CC"      , 17, 3, _dc_cc_a16);
-    // ADD_INS(0xdd, "*CALL"   , 17, 3, _dd_call_a16_alt);
+    ADD_INS(0xdd, "*CALL"   , 17, 3, unimpl);
     ADD_INS(0xdf, "RST_3"   , 11, 1, _df_rst_3);
 
     ADD_INS(0xe0, "RPO"     , 11, 1, _e0_rpo);
@@ -95,10 +100,10 @@ void cpu::load_instruction_set() {
     ADD_INS(0xe4, "CPO"     , 17, 3, _e4_cpo_a16);
     ADD_INS(0xe7, "RST_4"   , 11, 1, _e7_rst_4);
     ADD_INS(0xe8, "RPE"     , 11, 1, _e8_rpe);
-    ADD_INS(0xe9, "PHCL"    , 10, 1, _e9_phcl);
+    ADD_INS(0xe9, "PHCL"    , 5 , 1, _e9_phcl);
     ADD_INS(0xea, "JPE"     , 10, 3, _ea_jpe_a16);
     ADD_INS(0xec, "CPE"     , 17, 3, _ec_cpe_a16);
-    // ADD_INS(0xed, "*CALL"   , 17, 3, _ed_call_a16_alt);
+    ADD_INS(0xed, "*CALL"   , 17, 3, unimpl);
     ADD_INS(0xef, "RST_5"   , 11, 1, _ef_rst_5);
 
     ADD_INS(0xf0, "RP"      , 11, 1, _f0_rp);
@@ -108,14 +113,10 @@ void cpu::load_instruction_set() {
     ADD_INS(0xf8, "RM"      , 11, 1, _f8_rm);
     ADD_INS(0xfa, "JM"      , 10, 3, _fa_jm_a16);
     ADD_INS(0xfc, "CM"      , 17, 3, _fc_cm_a16);
-    // ADD_INS(0xfd, "*CALL"   , 17, 3, _fd_call_a16_alt);
+    ADD_INS(0xfd, "*CALL"   , 17, 3, unimpl);
     ADD_INS(0xff, "RST_7"   , 11, 1, _ff_rst_7);
 
     // +++++++ Jump/Calls instructions
-
-    // +++++++ START: Misc instructions
-    ADD_INS(0x23, "INC HL"      , 5 , 1, _23_inx_h_d8);
-    // +++++++ END: Misc instructions
 
 
     // +++++++ START: 8 bits load/store instructions
@@ -197,10 +198,6 @@ void cpu::load_instruction_set() {
     ADD_INS(0x73, "MOV M,E"     , 7 , 1, _73_mov_m_e_d8);
     ADD_INS(0x74, "MOV M,H"     , 7 , 1, _74_mov_m_h_d8);
     ADD_INS(0x75, "MOV M,L"     , 7 , 1, _75_mov_m_l_d8);
-    ADD_INS(0x76, "HALT", 7, 1, [this](uint8_t * opcode, cpu_state_t& state) {
-        printf("FUCK YOU!!!\n");
-        throw std::system_error(EFAULT, std::generic_category());
-    });
     ADD_INS(0x77, "MOV M,A"     , 7 , 1, _77_mov_m_a_d8);
 
     ADD_INS(0x78, "MOV A,B"     , 5 , 1, _78_mov_a_b_d8);
@@ -229,7 +226,7 @@ void cpu::load_instruction_set() {
     ADD_INS(0xD5, "PUSH D", 11, 1, _d5_push_d_d16);
 
     ADD_INS(0xE1, "POP H", 10, 1, _e1_pop_h_d16);
-    ADD_INS(0xE3, "XTHL" , 10, 1, _e3_xhtl_d16);
+    ADD_INS(0xE3, "XTHL" , 18, 1, _e3_xhtl_d16);
     ADD_INS(0xE5, "PUSH H", 11, 1, _e5_push_h_d16);
     ADD_INS(0xEB, "XCHG", 5, 1, _eb_xchg_d16);
 
@@ -245,7 +242,7 @@ void cpu::load_instruction_set() {
     ADD_INS(0x1c, "INR E", 5, 1, _1c_inr_e);
     ADD_INS(0x24, "INR H", 5, 1, _24_inr_h);
     ADD_INS(0x2c, "INR L", 5, 1, _2c_inr_l);
-    ADD_INS(0x34, "INR M", 5, 1, _34_inr_m);
+    ADD_INS(0x34, "INR M", 10, 1, _34_inr_m);
     ADD_INS(0x3c, "INR A", 5, 1, _3c_inr_a);
 
     ADD_INS(0x05, "DCR B", 5, 1, _05_dcr_b);
@@ -254,17 +251,17 @@ void cpu::load_instruction_set() {
     ADD_INS(0x1d, "DCR E", 5, 1, _1d_dcr_e);
     ADD_INS(0x25, "DCR H", 5, 1, _25_dcr_h);
     ADD_INS(0x2d, "DCR L", 5, 1, _2d_dcr_l);
-    ADD_INS(0x35, "DCR M", 5, 1, _35_dcr_m);
+    ADD_INS(0x35, "DCR M", 10, 1, _35_dcr_m);
     ADD_INS(0x3d, "DCR A", 5, 1, _3d_dcr_a);
 
-    ADD_INS(0x07, "RLC", 5, 1, _07_rlc);
-    ADD_INS(0x0f, "RRC", 5, 1, _0f_rrc);
-    ADD_INS(0x17, "RAL", 5, 1, _17_ral);
-    ADD_INS(0x1f, "RAR", 5, 1, _1f_rar);
-    ADD_INS(0x27, "DAA", 5, 1, _27_daa);
-    ADD_INS(0x2f, "CMA", 5, 1, _2f_cma);
-    ADD_INS(0x37, "STC", 5, 1, _37_stc);
-    ADD_INS(0x3f, "CMC", 5, 1, _3f_cmc);
+    ADD_INS(0x07, "RLC", 4, 1, _07_rlc);
+    ADD_INS(0x0f, "RRC", 4, 1, _0f_rrc);
+    ADD_INS(0x17, "RAL", 4, 1, _17_ral);
+    ADD_INS(0x1f, "RAR", 4, 1, _1f_rar);
+    ADD_INS(0x27, "DAA", 4, 1, _27_daa);
+    ADD_INS(0x2f, "CMA", 4, 1, _2f_cma);
+    ADD_INS(0x37, "STC", 4, 1, _37_stc);
+    ADD_INS(0x3f, "CMC", 4, 1, _3f_cmc);
 
     ADD_INS(0x80, "ADD B"       , 4 , 1, _80_add_b);
     ADD_INS(0x81, "ADD C"       , 4 , 1, _81_add_c);
@@ -350,16 +347,16 @@ void cpu::load_instruction_set() {
 
     // +++++++ START: 16 bits arithmetic/logical instructions
     ADD_INS(0x03, "INX B", 5, 1, _03_inx_b_d16);
-    ADD_INS(0x09, "DAD B", 5, 1, _09_dad_b_d16);
+    ADD_INS(0x09, "DAD B", 10, 1, _09_dad_b_d16);
     ADD_INS(0x0b, "DCX B", 5, 1, _0b_dcx_b_d16);
     ADD_INS(0x13, "INX D", 5, 1, _13_inx_d_d16);
-    ADD_INS(0x19, "DAD D", 5, 1, _19_dad_d_d16);
+    ADD_INS(0x19, "DAD D", 10, 1, _19_dad_d_d16);
     ADD_INS(0x1b, "DCX D", 5, 1, _1b_dcx_d_d16);
     ADD_INS(0x23, "INX H", 5, 1, _23_inx_h_d16);
-    ADD_INS(0x29, "DAD H", 5, 1, _29_dad_h_d16);
+    ADD_INS(0x29, "DAD H", 10, 1, _29_dad_h_d16);
     ADD_INS(0x2b, "DCX H", 5, 1, _2b_dcx_h_d16);
     ADD_INS(0x33, "INC SP", 5, 1, _33_inx_sp_d16);
-    ADD_INS(0x39, "DAD SP", 5, 1, _39_dad_sp_d16);
+    ADD_INS(0x39, "DAD SP", 10, 1, _39_dad_sp_d16);
     ADD_INS(0x3b, "DCX SP", 5, 1, _3b_dcx_sp_d16);
     // +++++++ END: 16 bits arithmetic/logical instructions
 
