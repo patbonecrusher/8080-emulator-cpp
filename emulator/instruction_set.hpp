@@ -51,10 +51,6 @@ void _fc_cm_a16(uint8_t * opcode, cpu_state_t& state);
 // void _fd_call_a16_alt(uint8_t * opcode, cpu_state_t& state);
 void _ff_rst_7(uint8_t * opcode, cpu_state_t& state);
 
-// +++++++ START: Misc instructions
-void _23_inx_h_d8(uint8_t * opcode, cpu_state_t& state);
-// +++++++ END: Misc instructions
-
 // +++++++ START: 8 bits load/store instructions
 void _02_stax_b_d8(uint8_t * opcode, cpu_state_t& state);
 void _06_mvi_b_d8(uint8_t * opcode, cpu_state_t& state);

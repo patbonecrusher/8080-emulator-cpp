@@ -47,13 +47,6 @@ extern void _fb_ei(uint8_t * opcode, cpu_state_t& state) { state.int_enable = tr
 // +++++++ END: Misc/Control instructions
 
 // +++++++ Jump/Call instructions
-extern void _23_inx_h_d8(uint8_t * opcode, cpu_state_t& state) {
-  // HL<-HL+1
-  state.l++;
-  if (0 == state.l) state.h++;
-}
-
-
 extern void _c0_rnz(uint8_t * opcode, cpu_state_t& state) {
   if (!state.cc.z) {
     state.pc = (state.memory[state.sp+1]<<8 | state.memory[state.sp]); 
