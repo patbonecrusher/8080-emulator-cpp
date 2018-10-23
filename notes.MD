@@ -36,3 +36,41 @@ There is a way to figure out the clock cycle of a computer and from that, adjust
 
 We know the CPU is 2MGZ, 2M clock cycles per second
 We know how many clock cycles were interpreted
+
+```
+#include <iostream>
+#include <string>
+
+template<typename writer>
+class logger: public writer {
+public:
+  void warn(const std::string& msg){ this->write("WARN", msg); }
+  void error(const std::string& msg){ this->write("ERROR", msg); }
+  void info(const std::string& msg){ this->write("INFO", msg); }
+};
+
+class file_writer {
+  /*...*/
+public:
+  void init( const std::string& file ) { /*...*/ }
+
+protected:
+  void write( const std::string& kind, const std::string& msg ) {
+    /*...*/
+  }
+};
+
+class network_writer {
+  /*...*/
+public:
+  void init( const std::string& address, unsigned short port ) { /*...*/ }
+
+protected:
+  void write( const std::string& kind, const std::string& msg ) {
+    /*...*/
+  }
+};
+
+typedef logger<file_writer> file_logger;
+typedef logger<network_writer> network_logger;
+```
