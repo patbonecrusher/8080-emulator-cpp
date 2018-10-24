@@ -7,6 +7,7 @@ http://computerarcheology.com/Arcade/SpaceInvaders/Code.html
 https://github.com/thibaultimbert/Intel8080
 https://github.com/kpmiller/emulator101
 https://github.com/ezet/i8080-emulator.git
+https://www.tramm.li/i8080/index.html emulator with vt100
 
 g++ -std=gnu++17 dis8080.cpp
 

@@ -46,6 +46,24 @@ void ReadFileIntoBufferAt(uint8_t* memory, char* filename, uint32_t offset)
 	fclose(f);
 }
 
+template<typename Function>
+class Finally final
+{
+public:
+    explicit Finally(Function f) : f(std::move(f)) {}
+    ~Finally() { f(); } // (1) See below
+
+    Finally(const Finally&) = delete;
+    Finally(Finally&&) = default;
+    Finally& operator =(const Finally&) = delete;
+    Finally& operator =(Finally&&) = delete;
+private:
+    Function f;
+};
+
+template<typename Function>
+auto onExit(Function &&f) { return Finally<std::decay_t<Function>>{std::forward<Function>(f)}; }
+
 #include <termios.h>
 #include <unistd.h>
 
@@ -80,6 +98,7 @@ int main (int argc, char**argv) {
 
 // make sure we use the system one, not the brew one.
   system("/bin/stty raw -echo"); 
+  auto resetTtyOnExit = onExit([&](){ printf("Y\n"); system("stty cooked"); });
   try {
     char c = 'n';
     do {
