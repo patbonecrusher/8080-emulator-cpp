@@ -17,6 +17,8 @@
 #include "cpu_state.hpp"
 #include "cpu.hpp"
 
+#if !NEW_WAY
+
 using namespace std;
 using std::cout;
 using std::endl;
@@ -121,3 +123,4 @@ int main (int argc, char**argv) {
   // tcsetattr(STDIN_FILENO, TCSANOW, &newt);
   // // return core.run();
 }
+#endif

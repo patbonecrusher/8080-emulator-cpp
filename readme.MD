@@ -17,3 +17,8 @@ http://samples.mameworld.info/
 https://bluishcoder.co.nz/js8080/
 http://pastraiser.com/cpu/i8080/i8080_opcodes.html
 
+
+http://sensi.org/~svo/i8080/
+https://onlinedisassembler.com/odaweb/BX5YAjyU/0
+
+https://www.asm80.com/ - awesome online ide

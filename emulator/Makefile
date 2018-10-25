@@ -1,12 +1,15 @@
 
 MKPATH	= @[ -d "$(1)" ] || mkdir -p "$(1)"
 
+OLD_WAY=0
 
 APP       = emu8080.app
+NEWAPP    = new_emu.app
 SRC       = $(wildcard *.cpp)
 OBJ       = $(SRC:.cpp=.o)
 
 CPPFLAGS  = -std=gnu++17 # -Wall -Werror # -fPIC -O2 -g # -I./include
+CPPFLAGS += -DOLD_WAY=${OLD_WAY}
 CC        = g++
 
 .PHONY: all clean
@@ -15,6 +18,9 @@ CC        = g++
 	$(CC) $(CPPFLAGS) -c $^ -o $@
 
 $(APP): $(OBJ)
+	$(CC) -o $@ $^
+
+$(NEWAPP): $(OBJ)
 	$(CC) -o $@ $^
 
 all: $(APP) $(OBJ)
