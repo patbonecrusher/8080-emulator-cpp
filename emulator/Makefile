@@ -9,7 +9,6 @@ SRC       = $(wildcard *.cpp)
 OBJ       = $(SRC:.cpp=.o)
 
 CPPFLAGS  = -std=gnu++17 # -Wall -Werror # -fPIC -O2 -g # -I./include
-CPPFLAGS += -DOLD_WAY=${OLD_WAY}
 CC        = g++
 
 .PHONY: all clean

@@ -17,8 +17,6 @@
 #include "cpu_state.hpp"
 #include "cpu.hpp"
 
-#if !NEW_WAY
-
 using namespace std;
 using std::cout;
 using std::endl;
@@ -69,7 +67,7 @@ auto onExit(Function &&f) { return Finally<std::decay_t<Function>>{std::forward<
 #include <termios.h>
 #include <unistd.h>
 
-int main (int argc, char**argv) {
+int main_old (int argc, char**argv) {
   // termios oldt;
   // tcgetattr(STDIN_FILENO, &oldt);
   // termios newt = oldt;
@@ -123,4 +121,3 @@ int main (int argc, char**argv) {
   // tcsetattr(STDIN_FILENO, TCSANOW, &newt);
   // // return core.run();
 }
-#endif
