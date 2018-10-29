@@ -4,6 +4,35 @@
 #include "program.hpp"
 #include "picosha2.hpp"
 
+#include "libzippp.h"
+using namespace libzippp;
+using namespace std;
+
+void dumpZip() {
+ZipArchive zf("../roms/invaders.zip");
+  zf.open(ZipArchive::READ_ONLY);
+
+  vector<ZipEntry> entries = zf.getEntries();
+  vector<ZipEntry>::iterator it;
+  for(it=entries.begin() ; it!=entries.end(); ++it) {
+    ZipEntry entry = *it;
+    string name = entry.getName();
+    int size = entry.getSize();
+
+    cout << name << ": " << size << endl;
+    // //the length of binaryData will be size
+    // void* binaryData = entry.readAsBinary();
+
+    // //the length of textData will be size
+    // string textData = entry.readAsText();
+
+    //...
+  }
+
+  zf.close();
+  
+}
+
 extern void main_old (const char * fileName, int offset);
 
 int main (int argc, char*argv[]) {
@@ -66,7 +95,7 @@ int main (int argc, char*argv[]) {
     picosha2::hash256(f, s.begin(), s.end());
     std::string hex_str = picosha2::bytes_to_hex_string(s.begin(), s.end());
     std::cout << hex_str << std::endl;
-
+    dumpZip();
 
     if (approach == "old") {
       main_old(result["input"].as<std::string>().c_str(), 100);

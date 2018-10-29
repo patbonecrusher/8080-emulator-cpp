@@ -22,3 +22,5 @@ http://sensi.org/~svo/i8080/
 https://onlinedisassembler.com/odaweb/BX5YAjyU/0
 
 https://www.asm80.com/ - awesome online ide
+
+https://github.com/okdshin/PicoSHA2 - sha

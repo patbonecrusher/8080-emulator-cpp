@@ -17,10 +17,7 @@ CC        = g++
 	$(CC) $(CPPFLAGS) -c $^ -o $@
 
 $(APP): $(OBJ)
-	$(CC) -o $@ $^
-
-$(NEWAPP): $(OBJ)
-	$(CC) -o $@ $^
+	$(CC) -L/usr/local/Cellar/lzlib/1.10/lib -L/usr/local/lib -llz -lzip -o $@ $^
 
 all: $(APP) $(OBJ)
 	@echo "hello"
