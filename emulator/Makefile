@@ -10,6 +10,9 @@ OBJ       = $(SRC:.cpp=.o)
 
 CPPFLAGS  = -std=gnu++17 # -Wall -Werror # -fPIC -O2 -g # -I./include
 CC        = g++
+LDFLAGS   = -L/usr/lib/x86_64-linux-gnu
+LDFLAGS  += -L/usr/local/Cellar/lzlib/1.10/lib
+LDFLAGS  += -L/usr/local/lib
 
 .PHONY: all clean
 
@@ -17,7 +20,7 @@ CC        = g++
 	$(CC) $(CPPFLAGS) -c $^ -o $@
 
 $(APP): $(OBJ)
-	$(CC) -L/usr/local/Cellar/lzlib/1.10/lib -L/usr/local/lib -llz -lzip -o $@ $^
+	$(CC) $(LDFLAGS) -o $@ $^ -llz -lzip 
 
 all: $(APP) $(OBJ)
 	@echo "hello"
