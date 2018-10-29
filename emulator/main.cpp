@@ -2,7 +2,9 @@
 #include "cxxopts.hpp"
 #include "finally.hpp"
 #include "program.hpp"
+#include "picosha2.hpp"
 
+extern void main_old (const char * fileName, int offset);
 
 int main (int argc, char*argv[]) {
   try
@@ -14,12 +16,14 @@ int main (int argc, char*argv[]) {
 
     bool apple = false;
     std::string rom_path;
+    std::string approach;
 
     options
       .allow_unrecognised_options()
       .add_options()
       ("r,roms", "roms location", cxxopts::value<std::string>(rom_path)->default_value("../roms"))
-      ("a,apple", "an apple", cxxopts::value<bool>(apple))
+      ("a,approach", "old/new", cxxopts::value<std::string>(approach)->default_value("old"))
+      // ("a,apple", "an apple", cxxopts::value<bool>(apple))
       ("b,bob", "Bob")
       ("t,true", "True", cxxopts::value<bool>()->default_value("true"))
       ("f, file", "File", cxxopts::value<std::vector<std::string>>(), "FILE")
@@ -55,6 +59,19 @@ int main (int argc, char*argv[]) {
     auto result = options.parse(argc, argv);
 
     std::cout << rom_path << std::endl;
+    std::cout << approach << std::endl;
+
+    std::ifstream f(result["input"].as<std::string>().c_str(), std::ios::binary);
+    std::vector<unsigned char> s(picosha2::k_digest_size);
+    picosha2::hash256(f, s.begin(), s.end());
+    std::string hex_str = picosha2::bytes_to_hex_string(s.begin(), s.end());
+    std::cout << hex_str << std::endl;
+
+
+    if (approach == "old") {
+      main_old(result["input"].as<std::string>().c_str(), 100);
+      exit(0);
+    }
 
     if (result.count("help"))
     {

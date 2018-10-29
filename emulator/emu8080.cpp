@@ -67,7 +67,8 @@ auto onExit(Function &&f) { return Finally<std::decay_t<Function>>{std::forward<
 #include <termios.h>
 #include <unistd.h>
 
-int main_old (int argc, char**argv) {
+
+extern void main_old (const char * fileName, int offset) {
   // termios oldt;
   // tcgetattr(STDIN_FILENO, &oldt);
   // termios newt = oldt;
@@ -79,15 +80,15 @@ int main_old (int argc, char**argv) {
   // std::cout << "File content size is: " << fileContent.size() << std::endl;
   // dissassemble8080Blob(fileContent);
 
-  auto fileName = argv[1];
-  int offset = strtol(argv[2], NULL, 16);
+  // auto fileName = argv[1];
+  // int offset = strtol(argv[2], NULL, 16);
 	int done = 0;
   system("/bin/stty -raw");
 
   auto core = cpu();
   core.load_instruction_set();
   core.cpu_state.pc = offset;
-  ReadFileIntoBufferAt(core.memory, fileName, offset);
+  ReadFileIntoBufferAt(core.memory, (char*) fileName, offset);
 
   //Skip DAA test    
   core.memory[0x59c] = 0xc3; //JMP    
