@@ -64,8 +64,8 @@ void cpu::load_instruction_set() {
     });
 
 
-    ADD_INS(0xd3, "OUT", 10, 2, unimpl);
-    ADD_INS(0xdb, "IN" , 10, 2, unimpl);
+    ADD_INS(0xd3, "OUT", 10, 2, _d3_out_d8);
+    ADD_INS(0xdb, "IN" , 10, 2, _db_in_d8);
     ADD_INS(0xf3, "DI" , 4 , 1, _f3_di );
     ADD_INS(0xfb, "EI" , 4 , 1, _fb_ei );
     // +++++++ END: Misc/Control instructions

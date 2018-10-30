@@ -44,6 +44,15 @@
 // NOP && HALT && OUT && IN && DI && EI Are no-op
 extern void _f3_di(uint8_t * opcode, cpu_state_t& state) { state.int_enable = false; }
 extern void _fb_ei(uint8_t * opcode, cpu_state_t& state) { state.int_enable = true; }
+
+void _d3_out_d8(uint8_t * opcode, cpu_state_t& state) { 
+//          this.writePort(this.nextByte(), this.a);
+}
+void _db_in_d8(uint8_t * opcode, cpu_state_t& state) {
+          // this.a = this.readPort(this.nextByte());
+
+}
+
 // +++++++ END: Misc/Control instructions
 
 // +++++++ Jump/Call instructions

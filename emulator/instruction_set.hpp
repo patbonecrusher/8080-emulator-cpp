@@ -6,6 +6,9 @@
 void _f3_di(uint8_t * opcode, cpu_state_t& state);
 void _fb_ei(uint8_t * opcode, cpu_state_t& state);
 
+void _d3_out_d8(uint8_t * opcode, cpu_state_t& state);
+void _db_in_d8(uint8_t * opcode, cpu_state_t& state);
+
 void _c0_rnz(uint8_t * opcode, cpu_state_t& state);
 void _c2_jnz_a16(uint8_t * opcode, cpu_state_t& state);
 void _c3_jmp_a16(uint8_t * opcode, cpu_state_t& state);
