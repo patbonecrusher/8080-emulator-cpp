@@ -29,7 +29,7 @@ typedef vector<byte> bin_array;
 typedef bin_array::iterator bin_array_it;
 typedef bin_array::const_iterator bin_array_const_it;
 
-void ReadFileIntoBufferAt(uint8_t* memory, char* filename, uint32_t offset)
+extern void ReadFileIntoBufferAt(uint8_t* memory, char* filename, uint32_t offset)
 {
 	FILE *f= fopen(filename, "rb");
 	if (f==NULL)
@@ -99,7 +99,7 @@ extern void main_old (const char * fileName, int offset) {
 
 // make sure we use the system one, not the brew one.
   system("/bin/stty raw -echo"); 
-  auto resetTtyOnExit = onExit([&](){ printf("Y\n"); system("stty cooked"); });
+  auto resetTtyOnExit = onExit([&](){ printf("Y\n"); system("stty cooked"); system("stty sane"); });
   try {
     char c = 'n';
     do {
@@ -114,7 +114,6 @@ extern void main_old (const char * fileName, int offset) {
     } while (c != 's');
   } catch (system_error& err) {
     cout << "Systen was halted" << endl;
-    system("stty cooked"); 
   }
 
   // system("stty cooked"); 

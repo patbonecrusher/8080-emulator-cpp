@@ -1,16 +1,28 @@
-#pragma once
-#include <cstddef>
-#include <cstdint>
-#include <vector>
+// #pragma once
+// #include <string>
+// #include <cstddef>
+// #include <cstdint>
+// #include <vector>
+// #include <functional>
 
-typedef std::vector<std::byte>    byte_arr;
-typedef byte_arr::iterator        byte_arr_it;
-typedef byte_arr::const_iterator  byte_arr_const_it;
+// typedef std::function<void(uint8_t*, std::string&)> program_loader_fn_t;
 
-struct program {
+// class Program {
 
-  static byte_arr read_file_at_path(std::string const& path);
+//   public:
+//     Program(std::string const& filename, program_loader_fn_t loaderFunction)
+//      : filename(std::move(filename))
+//      , loaderFunction(std::move(loaderFunction)) {}
+//     Program(const Program&) = delete;
+//     Program(Program&&) = default;
+//     Program& operator =(const Program&) = delete;
+//     Program& operator =(Program&&) = delete;
 
-  std::uint16_t start_address;
-  byte_arr      program_bin;
-};
+//     void load_program_in_memory(uint8_t* memory) {
+//       this.loaderFunction(memory, )
+//     }
+  
+//   private:
+//     std::string filename;
+//     program_loader_fn_t loaderFunction;
+// };

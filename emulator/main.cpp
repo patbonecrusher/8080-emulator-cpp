@@ -4,6 +4,9 @@
 #include "program.hpp"
 #include "picosha2.hpp"
 
+#include "cpu_state.hpp"
+#include "cpu.hpp"
+
 #include "libzippp.h"
 using namespace libzippp;
 using namespace std;
@@ -33,7 +36,65 @@ ZipArchive zf("../roms/invaders.zip");
   
 }
 
+extern void ReadFileIntoBufferAt(uint8_t* memory, char* filename, uint32_t offset);
 extern void main_old (const char * fileName, int offset);
+
+// cpu should be machine
+typedef std::function<void(cpu&, std::string const&)> program_loader_fn_t;
+
+void diagnostic_loader(cpu& core, std::string const& filename) {
+  ReadFileIntoBufferAt(core.memory, (char*) filename.c_str(), 0x100);
+  core.cpu_state.pc = 0x100;
+
+  //Skip DAA test    
+  core.memory[0x59c] = 0xc3; //JMP    
+  core.memory[0x59d] = 0xc2;    
+  core.memory[0x59e] = 0x05;    
+
+  core.memory[0x06a1] = 0x76;
+}
+
+void invader_loader(cpu& core, std::string const& filename) {
+  
+}
+
+
+void main_new(std::string const& fileName) {
+  // Get a program from the factory
+  // Tell the machine to run the program
+  //    for now, load the program in the memory and start the cpu.
+
+	int done = 0;
+  system("/bin/stty -raw");
+  auto resetTtyOnExit = onExit([&](){ printf("Y\n"); system("stty cooked"); system("stty sane"); });
+
+  auto core = cpu();
+  core.load_instruction_set();
+  program_loader_fn_t loader_fn;
+
+  if (fileName == "../roms/cpudiag.bin") {
+    loader_fn = diagnostic_loader;
+  }
+  loader_fn(core, fileName);
+
+  system("/bin/stty raw -echo"); 
+  try {
+    char c = 'n';
+    do {
+      core.next();
+      cout << "\r";
+
+      c = getchar();
+      if (c == 'g') {
+        system("/bin/stty -raw");
+        core.run();
+      }
+    } while (c != 's');
+  } catch (system_error& err) {
+    cout << "Systen was halted" << endl;
+  }
+
+}
 
 int main (int argc, char*argv[]) {
   try
@@ -90,15 +151,18 @@ int main (int argc, char*argv[]) {
     std::cout << rom_path << std::endl;
     std::cout << approach << std::endl;
 
-    std::ifstream f(result["input"].as<std::string>().c_str(), std::ios::binary);
-    std::vector<unsigned char> s(picosha2::k_digest_size);
-    picosha2::hash256(f, s.begin(), s.end());
-    std::string hex_str = picosha2::bytes_to_hex_string(s.begin(), s.end());
-    std::cout << hex_str << std::endl;
-    dumpZip();
+    // std::ifstream f(result["input"].as<std::string>().c_str(), std::ios::binary);
+    // std::vector<unsigned char> s(picosha2::k_digest_size);
+    // picosha2::hash256(f, s.begin(), s.end());
+    // std::string hex_str = picosha2::bytes_to_hex_string(s.begin(), s.end());
+    // std::cout << hex_str << std::endl;
+    // dumpZip();
 
     if (approach == "old") {
-      main_old(result["input"].as<std::string>().c_str(), 100);
+      main_old(result["input"].as<std::string>().c_str(), 0x100);
+      exit(0);
+    } else if (approach == "new") {
+      main_new(result["input"].as<std::string>().c_str());
       exit(0);
     }
 

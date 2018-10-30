@@ -29,7 +29,7 @@ test: $(APP)
 	./$(APP) ../roms/space-invaders/invaders 0
 
 diag: $(APP)
-	./$(APP) -i ../roms/cpudiag.bin
+	./$(APP) -i ../roms/cpudiag.bin -a new
 
 clean:
 	rm -rf *.o *.so.* *.a *.la $(APP)
