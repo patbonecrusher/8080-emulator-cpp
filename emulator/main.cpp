@@ -55,7 +55,39 @@ void diagnostic_loader(cpu& core, std::string const& filename) {
 }
 
 void invader_loader(cpu& core, std::string const& filename) {
-  
+  ZipArchive zf(filename);
+  zf.open(ZipArchive::READ_ONLY);
+
+  vector<ZipEntry> entries = zf.getEntries();
+  vector<ZipEntry>::iterator it;
+  for(it=entries.begin() ; it!=entries.end(); ++it) {
+    ZipEntry entry = *it;
+    string name = entry.getName();
+    int size = entry.getSize();
+
+    cout << name << ": " << size << endl;
+    //the length of binaryData will be size
+    auto binaryData = entry.readAsBinary();
+
+    auto e = name.rfind("invaders.e")!=std::string::npos;
+    auto f = name.rfind("invaders.f")!=std::string::npos;
+    auto g = name.rfind("invaders.g")!=std::string::npos;
+    auto h = name.rfind("invaders.h")!=std::string::npos;
+
+    cout << e << " " << f << " " << g << " " << h << endl;
+
+    if (h) { cout << "H"; memcpy (&core.memory[0x0000], binaryData, size); }
+    if (g) { cout << "G"; memcpy (&core.memory[0x0800], binaryData, size); }
+    if (f) { cout << "F"; memcpy (&core.memory[0x1000], binaryData, size); }
+    if (e) { cout << "E"; memcpy (&core.memory[0x1800], binaryData, size); }
+
+    // //the length of textData will be size
+    // string textData = entry.readAsText();
+
+    //...
+  }
+
+  zf.close();
 }
 
 
@@ -74,6 +106,8 @@ void main_new(std::string const& fileName) {
 
   if (fileName == "../roms/cpudiag.bin") {
     loader_fn = diagnostic_loader;
+  } else if (fileName == "../roms/invaders.zip") {
+    loader_fn = invader_loader;
   }
   loader_fn(core, fileName);
 
