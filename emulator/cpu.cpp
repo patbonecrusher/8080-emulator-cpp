@@ -37,7 +37,7 @@ void cpu::halt(uint8_t * opcode, cpu_state_t& state) {
     throw std::system_error(EFAULT, std::generic_category());
 }
 
-void unimpl(uint8_t * opcode, cpu_state_t& state) {
+void unimpl(uint8_t * opcode, op_info_t& op_info, cpu_state_t& state) {
     cout << "error: unimplement instruction" << endl;
     exit(1);
 }
@@ -59,7 +59,7 @@ void cpu::load_instruction_set() {
     ADD_INS(0x28, "NOP", 4);
     ADD_INS(0x38, "NOP", 4);
 
-    ADD_INS(0x76, "HALT", 7, 1, [this](uint8_t * opcode, cpu_state_t& state) {
+    ADD_INS(0x76, "HALT", 7, 1, [this](uint8_t * opcode, op_info_t& op_info, cpu_state_t& state) {
         throw std::system_error(EFAULT, std::generic_category());
     });
 

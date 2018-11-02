@@ -8,7 +8,20 @@
 
 #include "cpu_state.hpp"
 
-typedef std::function<void(uint8_t*, cpu_state_t&)> execute_fn_t;
+
+typedef struct _op_info {
+    uint8_t code;
+    uint16_t pc;
+    uint16_t next_pc;
+    uint8_t cycle_count;
+    union {
+        uint8_t data[2];
+        uint8_t val_1_byte;
+        uint16_t val_2_bytes;
+    };
+} op_info_t;
+
+typedef std::function<void(uint8_t*, op_info_t&, cpu_state_t&)> execute_fn_t;
 
 typedef struct _instruction {
     _instruction() {}

@@ -1,6 +1,9 @@
 #include <cstddef>
 #include <iostream>
 #include <iomanip>
+#include <cstring>
+
+using namespace std;
 
 #include "instruction.hpp"
 
@@ -46,26 +49,28 @@ uint8_t _instruction::dissassemble(uint8_t *data, uint16_t pc) {
     return op_size;
 }
 
-typedef struct _op_info {
-    uint8_t opcode;
-    uint8_t next_opcode;
-    union {
-        uint8_t val_1_byte;
-        uint16_t val_2_bytes;
-    };
-} op_info;
-
 uint8_t _instruction::execute(uint8_t * data, cpu_state_t &state) {
+    op_info_t oi;
+    memset(&oi, 0, sizeof(op_info_t));
+    oi.code     = this->id;
+    oi.pc       = state.pc;
+    oi.next_pc  = state.pc + this->op_size;
+    oi.cycle_count = cycle_count;
+    if (op_size <= 2) { oi.data[0] = data[0]; }
+    if (op_size == 3) { oi.data[1] = data[1]; }
+
     // Increment the pc automatically.  If an instruction changes it, that
-    // is fine.
-    state.pc += this->op_size;
+    // is fine.  // MOVE THIS LATER TO after the execute oonce all has been
+    // ported to use the op_info.
+    //state.pc += this->op_size;
+    state.pc = oi.next_pc;
 
     // uint16_t value = 0;
     // if      (op_size == 3) { value = data[1] << 8 | data[0]; }
     // else if (op_size == 2) { value = data[0]; }
 
     // Call the fn if one exists, the instruction could be a no-op.
-    if (this->execute_fn != NULL) this->execute_fn(data, state);
+    if (this->execute_fn != NULL) this->execute_fn(data, oi, state);
     
     state.cycles += this->cycle_count;
 

@@ -1,3 +1,5 @@
+#include <cstring>
+
 #include "program_factory.hpp"
 #include "picosha2.hpp"
 
