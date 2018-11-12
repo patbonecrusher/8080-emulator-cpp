@@ -47,6 +47,8 @@ SRC       := $(foreach sdir,$(SRC_DIR),$(wildcard $(sdir)/*.cpp))
 OBJ       := $(patsubst ./%.cpp,build/%.o,$(SRC))
 INCLUDES  := $(addprefix -I,$(SRC_DIR))
 
+APP       = build/emu8080.app
+
 vpath %.cpp $(SRC_DIR)
 
 define make-goal
@@ -56,9 +58,9 @@ endef
 
 .PHONY: all checkdirs clean
 
-all: checkdirs build/foo.app
+all: checkdirs $(APP)
 
-build/foo.app: $(OBJ)
+$(APP): $(OBJ)
 	$(LD) $(LDFLAGS) $^ -o $@ -llz -lzip 
 
 
