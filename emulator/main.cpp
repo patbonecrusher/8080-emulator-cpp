@@ -6,7 +6,7 @@
 #include "cpu.hpp"
 #include "program_factory.hpp"
 
-
+#ifndef WASM_MAIN
 extern void main_old (const char * fileName, int offset);
 
 void main_new(std::string const& file_name) {
@@ -85,3 +85,39 @@ int main (int argc, char*argv[]) {
 
   return 0;
 }
+
+#else
+
+#include <emscripten/emscripten.h>
+
+extern "C" unsigned char ___roms_cpudiag_bin[];
+extern "C" unsigned int ___roms_cpudiag_bin_len;
+
+int main (int argc, char*argv[]) {
+  printf("hi\n");
+}
+
+extern "C" void EMSCRIPTEN_KEEPALIVE run_diag() {
+  auto core = cpu();
+  core.load_instruction_set();
+
+  memcpy(&(core.memory[0x100]), ___roms_cpudiag_bin, ___roms_cpudiag_bin_len);
+  core.cpu_state.pc = 0x100;
+
+  //Skip DAA test    
+  core.memory[0x59c] = 0xc3; //JMP    
+  core.memory[0x59d] = 0xc2;    
+  core.memory[0x59e] = 0x05;    
+
+  core.memory[0x06a1] = 0x76;
+  try {
+    core.run();
+  } catch (system_error& err) {
+    cout << "Systen was halted" << endl;
+  } catch (std::exception& ex) {
+    cout << "Systen was halted 2" << endl;
+  }
+}
+
+
+#endif

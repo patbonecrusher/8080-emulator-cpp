@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>WebAssembly Example</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--    <script async type="text/javascript" src="myLibrary.js"></script> -->
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+  </head>
+  <body>
+
+    <button id="diag" type="button">Click Me!</button>
+
+    <!-- Include the JavaScript glue code. -->
+    <!-- This will load the WebAssembly module and run its main. --> 
+    <script src="emulator.js"></script>
+    <script>
+      // When a HTML dice is clicked, it's value will change.
+      var diag = document.getElementById('diag');
+      diag.addEventListener("click", ev => {
+	      console.log('bbb');
+        try {
+          _run_diag();
+        } catch (e) {
+          console.log(e);
+        }
+      });
+    </script>
+   
+  </body>
+</html> 

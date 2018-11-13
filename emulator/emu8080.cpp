@@ -23,11 +23,11 @@ using std::endl;
 using std::hex;
 using std::setfill;
 using std::setw;
-using std::byte;
+// using std::byte;
 
-typedef vector<byte> bin_array;
-typedef bin_array::iterator bin_array_it;
-typedef bin_array::const_iterator bin_array_const_it;
+// typedef vector<byte> bin_array;
+// typedef bin_array::iterator bin_array_it;
+// typedef bin_array::const_iterator bin_array_const_it;
 
 extern void ReadFileIntoBufferAt(uint8_t* memory, char* filename, uint32_t offset)
 {
