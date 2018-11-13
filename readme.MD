@@ -24,3 +24,5 @@ https://onlinedisassembler.com/odaweb/BX5YAjyU/0
 https://www.asm80.com/ - awesome online ide
 
 https://github.com/okdshin/PicoSHA2 - sha
+
+https://kripken.github.io/emscripten-site/docs/getting_started/downloads.html
