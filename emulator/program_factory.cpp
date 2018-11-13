@@ -1,3 +1,4 @@
+#ifdef NATIVE
 #include <cstring>
 
 #include "program_factory.hpp"
@@ -72,3 +73,4 @@ program_loader_fn_t loader_for_file(std::string const& file_name) {
   else if (sha == "5ca061feed2f17dbd73c27b56f4c1945817dda9de0410c161755bce5cffdbf36" ) { return invader_loader; }
   return nullptr;
 }
+#endif

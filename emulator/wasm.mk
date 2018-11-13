@@ -36,9 +36,9 @@ CC        := em++
 LD        := em++
 CPPFLAGS  = -std=gnu++1z
 CPPFLAGS += -DWASM_MAIN
-LDFLAGS   = -L/usr/lib/x86_64-linux-gnu
-LDFLAGS  += -L/usr/local/Cellar/lzlib/1.10/lib
-LDFLAGS  += -L/usr/local/lib
+#LDFLAGS   = -L/usr/lib/x86_64-linux-gnu
+#LDFLAGS  += -L/usr/local/Cellar/lzlib/1.10/lib
+#LDFLAGS  += -L/usr/local/lib
 LDFLAGS  += -s WASM=1 -s DISABLE_EXCEPTION_CATCHING=2 -s ASSERTIONS=2 -s EXTRA_EXPORTED_RUNTIME_METHODS="['cwrap', 'ccall']"
 # LDFLAGS  += -s WASM=1 -O3 -s DISABLE_EXCEPTION_CATCHING=2 -s ASSERTIONS=2 -s EXTRA_EXPORTED_RUNTIME_METHODS="['cwrap', 'ccall']"
 #LDFLAGS  += -s DISABLE_EXCEPTION_CATCHING=0
@@ -50,7 +50,9 @@ BUILD_DIR := $(addprefix build_wasm/,$(MODULES))
 SRC       := $(foreach sdir,$(SRC_DIR),$(wildcard $(sdir)/*.cpp))
 OBJ       := $(patsubst ./%.cpp,build_wasm/%.o,$(SRC))
 INCLUDES  := $(addprefix -I,$(SRC_DIR))
-INCLUDES  += -I/usr/local/include
+#INCLUDES  += -I/usr/local/include
+#INCLUDES  += -I/usr/include
+#INCLUDES  += -I/usr/include/x86_64-linux-gnu
 
 vpath %.cpp $(SRC_DIR)
 
@@ -65,7 +67,7 @@ all: checkdirs build_wasm/emulator.js
 
 build_wasm/emulator.js: $(OBJ)
 	@cp index.html build_wasm/index.html
-	$(LD) $(LDFLAGS) $^ -o $@ -llz -lzip 
+	$(LD) $(LDFLAGS) $^ -o $@ #-llz -lzip 
 
 
 checkdirs: $(BUILD_DIR)

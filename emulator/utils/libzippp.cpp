@@ -1,3 +1,4 @@
+#ifdef NATIVE
 /*
   libzippp.h -- exported declarations.
   Copyright (C) 2013 Cédric Tabin
@@ -605,3 +606,4 @@ int ZipArchive::readEntry(const ZipEntry& zipEntry, std::ofstream& ofOutput, Sta
     }
     return iRes;
 }
+#endif
