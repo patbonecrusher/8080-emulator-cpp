@@ -196,6 +196,7 @@ extern void _da_jc_a16(uint8_t * opcode,  op_info_t& op_info,  cpu_state_t& stat
 }
 extern void _dc_cc_a16(uint8_t * opcode,  op_info_t& op_info,  cpu_state_t& state) {
   // if CY, CALL adr 
+  // CAUSE THIS IS OUR RETURN ADDRESS
   // TODO: I DON'T UNDERSTAND THIS HERE
   // WHY ARE WE OPERATING ON THE NEXT INSTRUCTION ADDRESS.
   if (state.cc.cy) {

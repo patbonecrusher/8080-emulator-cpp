@@ -20,6 +20,8 @@ http://www.shaels.net/index.php/cpm80-22-documents/cpm-bdos/36-bdos-file-io-serv
 The bdos instructions are used by the call 0xCD instruction.
 in register C you put the function code you want to execute
 this is a CP/M thing.   for instance function code 9 will output the $ terminated string at address stored in DE
+http://www.shaels.net/index.php/cpm80-22-documents/cpm-bdos/31-bdos-overview
+
 
 Flags
 The processor maintains internal flag bits (a status register), which indicate the results of arithmetic and logical instructions. The flags are:

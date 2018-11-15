@@ -12,14 +12,34 @@
     <button id="diag" type="button">Click Me!</button>
 
     <!-- Include the JavaScript glue code. -->
+    <script>
+      var Module = {
+        onRuntimeInitialized: function() {
+          console.log('loaded')
+
+          var x = {
+            invoke: function(str) {
+              console.log('invoking with: ' + str);
+            }
+          };
+          var interfaceObject = Module.Interface.implement(x);
+          Module.invokeInterface(interfaceObject);
+          
+        }
+      };
+    </script>
+
     <!-- This will load the WebAssembly module and run its main. --> 
     <script src="emulator.js"></script>
+
     <script>
       // When a HTML dice is clicked, it's value will change.
       var diag = document.getElementById('diag');
       diag.addEventListener("click", ev => {
 	      console.log('bbb');
         try {
+          var person = Module.findPersonAtLocation([10.2, 156.5]);
+          console.log('Found someone! Their name is ' + person.name + ' and they are ' + person.age + ' years old');
           _run_diag();
         } catch (e) {
           console.log(e);

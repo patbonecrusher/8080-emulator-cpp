@@ -89,9 +89,11 @@ int main (int argc, char*argv[]) {
 #else
 
 #include <emscripten/emscripten.h>
+#include <emscripten/bind.h>
 
 extern "C" unsigned char ___roms_cpudiag_bin[];
 extern "C" unsigned int ___roms_cpudiag_bin_len;
+using namespace emscripten;
 
 int main (int argc, char*argv[]) {
   printf("hi\n");
@@ -117,6 +119,64 @@ extern "C" void EMSCRIPTEN_KEEPALIVE run_diag() {
   } catch (std::exception& ex) {
     cout << "Systen was halted 2" << endl;
   }
+}
+
+struct Point2f {
+    float x;
+    float y;
+};
+
+struct PersonRecord {
+    std::string name;
+    int age;
+};
+
+PersonRecord findPersonAtLocation(Point2f) {
+  PersonRecord p;
+  p.name = "pat";
+  p.age = 234;
+  return p;
+}
+
+EMSCRIPTEN_BINDINGS(my_value_example) {
+    value_array<Point2f>("Point2f")
+        .element(&Point2f::x)
+        .element(&Point2f::y)
+        ;
+
+    value_object<PersonRecord>("PersonRecord")
+        .field("name", &PersonRecord::name)
+        .field("age", &PersonRecord::age)
+        ;
+
+    emscripten::function("findPersonAtLocation", &findPersonAtLocation);
+}
+
+struct Interface {
+    virtual void invoke(const std::string& str) = 0;
+};
+
+struct InterfaceWrapper : public wrapper<Interface> {
+    EMSCRIPTEN_WRAPPER(InterfaceWrapper);
+    void invoke(const std::string& str) {
+        return call<void>("invoke", str);
+    }
+};
+
+EMSCRIPTEN_BINDINGS(interface) {
+    class_<Interface>("Interface")
+        .function("invoke", &Interface::invoke, pure_virtual())
+        .allow_subclass<InterfaceWrapper>("InterfaceWrapper")
+        ;
+}
+
+void invokeInterface(Interface* i) {
+  printf("here\n");
+  i->invoke("poopoo");
+}
+
+EMSCRIPTEN_BINDINGS(infokeinf) {
+    emscripten::function("invokeInterface", &invokeInterface, allow_raw_pointers());
 }
 
 
