@@ -93,6 +93,7 @@ extern void _c8_rz(uint8_t * opcode,  op_info_t& op_info,  cpu_state_t& state) {
 }
 extern void _c9_ret(uint8_t * opcode,  op_info_t& op_info,  cpu_state_t& state) {
   state.pc = state.memory[state.sp] | (state.memory[state.sp+1] << 8);
+  state.sp += 2;
   if (state.pc == 0) {
     throw std::system_error(EFAULT, std::generic_category());
   }
