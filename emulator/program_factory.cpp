@@ -12,6 +12,11 @@ using namespace std;
 
 extern void ReadFileIntoBufferAt(uint8_t* memory, char* filename, uint32_t offset);
 
+void default_loader(cpu& core, std::string const& filename) {
+  ReadFileIntoBufferAt(core.memory, (char*) filename.c_str(), 0x100);
+  core.cpu_state.pc = 0x100;
+}
+
 void diagnostic_loader(cpu& core, std::string const& filename) {
   ReadFileIntoBufferAt(core.memory, (char*) filename.c_str(), 0x100);
   core.cpu_state.pc = 0x100;
@@ -21,7 +26,7 @@ void diagnostic_loader(cpu& core, std::string const& filename) {
   core.memory[0x59d] = 0xc2;    
   core.memory[0x59e] = 0x05;    
 
-  core.memory[0x06a1] = 0x76;
+  // core.memory[0x06a1] = 0x76;
 }
 
 void invader_loader(cpu& core, std::string const& filename) {
@@ -71,6 +76,7 @@ program_loader_fn_t loader_for_file(std::string const& file_name) {
   string sha = compute_sha(file_name);
   if      (sha == "8dd25da9f24a29cb3da7dca8bd302aef3c6fb1f24cc88072863b540c06d082c3" ) { return diagnostic_loader; }
   else if (sha == "5ca061feed2f17dbd73c27b56f4c1945817dda9de0410c161755bce5cffdbf36" ) { return invader_loader; }
+  else    { return default_loader; }
   return nullptr;
 }
 #endif

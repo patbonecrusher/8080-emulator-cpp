@@ -68,7 +68,11 @@ extern void _c2_jnz_a16(uint8_t * opcode,  op_info_t& op_info,  cpu_state_t& sta
 }
 extern void _c3_jmp_a16(uint8_t * opcode,  op_info_t& op_info,  cpu_state_t& state) { 
   state.pc = OPCODE_TO16BIT(opcode);
+  if (state.pc == 0) {
+    throw std::system_error(EFAULT, std::generic_category());
+  }
 }
+
 extern void _c4_cnz_a16(uint8_t * opcode,  op_info_t& op_info,  cpu_state_t& state) {
   // 	if NZ, CALL adr
   if (state.cc.z == 0) {
@@ -89,6 +93,9 @@ extern void _c8_rz(uint8_t * opcode,  op_info_t& op_info,  cpu_state_t& state) {
 }
 extern void _c9_ret(uint8_t * opcode,  op_info_t& op_info,  cpu_state_t& state) {
   state.pc = state.memory[state.sp] | (state.memory[state.sp+1] << 8);
+  if (state.pc == 0) {
+    throw std::system_error(EFAULT, std::generic_category());
+  }
 }
 
 extern void _ca_jz_a16(uint8_t * opcode,  op_info_t& op_info,  cpu_state_t& state) {
@@ -114,7 +121,7 @@ extern void _cd_call_a16(uint8_t * opcode,  op_info_t& op_info,  cpu_state_t& st
         if (state.c == 9)    
         {    
             uint16_t offset = (state.d<<8) | (state.e);    
-            char *str = (char*) &state.memory[offset+3];  //skip the prefix bytes    
+            char *str = (char*) &state.memory[offset];  //skip the prefix bytes    
             while (*str != '$')    
                 printf("%c", *str++);    
             printf("\n");    

@@ -59,8 +59,10 @@ void cpu::load_instruction_set() {
     ADD_INS(0x28, "NOP", 4);
     ADD_INS(0x38, "NOP", 4);
 
+    // TODO THIS BASICALLY WAIT 10 CYCLES! MAKE IT A REAL HANDLER
     ADD_INS(0x76, "HALT", 7, 1, [this](uint8_t * opcode, op_info_t& op_info, cpu_state_t& state) {
-        throw std::system_error(EFAULT, std::generic_category());
+        // throw std::system_error(EFAULT, std::generic_category());
+        return 10;
     });
 
 
