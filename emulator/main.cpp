@@ -99,6 +99,27 @@ int main (int argc, char*argv[]) {
   printf("hi\n");
 }
 
+struct Interface {
+    virtual ~Interface() {}
+    virtual void invoke(const std::string& str) = 0;
+};
+
+struct InterfaceWrapper : public wrapper<Interface> {
+    EMSCRIPTEN_WRAPPER(InterfaceWrapper);
+    void invoke(const std::string& str) {
+        return call<void>("invoke", str);
+    }
+};
+
+EMSCRIPTEN_BINDINGS(interface) {
+    class_<Interface>("Interface")
+        .function("invoke", &Interface::invoke, pure_virtual())
+        .allow_subclass<InterfaceWrapper>("InterfaceWrapper")
+        ;
+}
+
+Interface* iii;
+
 extern "C" void EMSCRIPTEN_KEEPALIVE run_diag() {
   auto core = cpu();
   core.load_instruction_set();
@@ -111,8 +132,10 @@ extern "C" void EMSCRIPTEN_KEEPALIVE run_diag() {
   core.memory[0x59d] = 0xc2;    
   core.memory[0x59e] = 0x05;    
 
-  core.memory[0x06a1] = 0x76;
+//  core.memory[0x06a1] = 0x76;
   try {
+    iii->invoke("titicaca");
+    iii->invoke("titicooo");
     core.run();
   } catch (system_error& err) {
     cout << "Systen was halted" << endl;
@@ -152,27 +175,11 @@ EMSCRIPTEN_BINDINGS(my_value_example) {
     emscripten::function("findPersonAtLocation", &findPersonAtLocation);
 }
 
-struct Interface {
-    virtual void invoke(const std::string& str) = 0;
-};
-
-struct InterfaceWrapper : public wrapper<Interface> {
-    EMSCRIPTEN_WRAPPER(InterfaceWrapper);
-    void invoke(const std::string& str) {
-        return call<void>("invoke", str);
-    }
-};
-
-EMSCRIPTEN_BINDINGS(interface) {
-    class_<Interface>("Interface")
-        .function("invoke", &Interface::invoke, pure_virtual())
-        .allow_subclass<InterfaceWrapper>("InterfaceWrapper")
-        ;
-}
 
 void invokeInterface(Interface* i) {
   printf("here\n");
   i->invoke("poopoo");
+  iii = i;
 }
 
 EMSCRIPTEN_BINDINGS(infokeinf) {
