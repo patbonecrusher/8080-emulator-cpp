@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+ <title>JavaScript 8080 Emulator</title>
+ <style type="text/css">
+    :-webkit-full-screen #screen {  
+      width: 100%;  
+      height: 100%;  
+    }  
+
+   body{ height:100% }
+
+  canvas.fullscreen{
+    display:block;
+
+    position:absolute;
+    top:0;
+    left:0;
+    
+    width:100%;
+    height:100%;
+  }
+
+ </style>
+ <script type="text/javascript" src="jquery.js"></script>
+ <script type="text/javascript" src="js8080.js"></script>
+ <script type="text/javascript" src="invaderse.js"></script>
+ <script type="text/javascript" src="invadersf.js"></script>
+ <script type="text/javascript" src="invadersg.js"></script>
+ <script type="text/javascript" src="invadersh.js"></script>
+ <script type="text/javascript" src="lrescue1.js"></script>
+ <script type="text/javascript" src="lrescue2.js"></script>
+ <script type="text/javascript" src="lrescue3.js"></script>
+ <script type="text/javascript" src="lrescue4.js"></script>
+ <script type="text/javascript" src="lrescue5.js"></script>
+ <script type="text/javascript" src="lrescue6.js"></script>
+ <script type="text/javascript" src="tn01.js"></script>
+ <script type="text/javascript" src="tn02.js"></script>
+ <script type="text/javascript" src="tn03.js"></script>
+ <script type="text/javascript" src="tn04.js"></script>
+ <script type="text/javascript" src="tn05.js"></script>
+ <script type="text/javascript">
+   var audio = {};
+   function enableAudio() {
+     audio.basehit = document.createElement('audio');
+     audio.shot = document.createElement('audio');
+     audio.ufohit = document.createElement('audio');
+     audio.invhit = document.createElement('audio');
+     audio.ufo = document.createElement('audio');
+     audio.walk1 = document.createElement('audio');
+     audio.walk2 = document.createElement('audio');
+     audio.walk3 = document.createElement('audio');
+     audio.walk4 = document.createElement('audio');
+     audio.basehit.src='sound/basehit.ogg';
+     audio.shot.src='sound/shot.ogg';
+     audio.ufohit.src='sound/ufohit.ogg';
+     audio.invhit.src='sound/invhit.ogg';
+     audio.ufo.src='sound/ufo.ogg';
+     audio.walk1.src='sound/walk1.ogg';
+     audio.walk2.src='sound/walk2.ogg';
+     audio.walk3.src='sound/walk3.ogg';
+     audio.walk4.src='sound/walk4.ogg';
+   }
+
+   function createImageData(w, h) {
+     if (!cpu.ctx || !cpu.ctx.createImageData) {
+       cpu.ctx = null;
+       $('#screen').replaceWith("<p style='width: 400px'><b>The graphical display of the emulators screen has been disabled. Your browser does not support the features of the HTML5 canvas element that are required. You need a browser that has the createImageData method on the canvas 2D rendering context object. Nightly builds of <a href='http://www.mozilla.org/developer/#builds'>Firefox 3.1</a> and <a href='http://nightly.webkit.org/'>WebKit</a> are known to work.</b></p>");
+       return null;
+     }
+     else {
+       return cpu.ctx.createImageData(w, h);
+     }
+   }
+
+   function si() { 
+     if (cpu.interval)
+       clearInterval(cpu.interval);
+
+     cpu = new Cpu(memoryUpdated, sound, interrupt);   
+     cpu.count = 0;
+     if($('#screen').length > 0) {
+       cpu.ctx = $('#screen')[0].getContext('2d');
+       cpu.video = createImageData(224, 256);
+     }
+     cpu.load(0x0000, invadersh);
+     cpu.load(0x0800, invadersg);
+     cpu.load(0x1000, invadersf);
+     cpu.load(0x1800, invaderse);
+     update(cpu);
+   }
+
+   function bb() { 
+     if (cpu.interval)
+       clearInterval(cpu.interval);
+
+     cpu = new Cpu(memoryUpdated, sound, interrupt);   
+     cpu.count = 0;
+     if($('#screen').length > 0) {
+       cpu.ctx = $('#screen')[0].getContext('2d');
+       cpu.video = createImageData(224, 256);
+     }
+     cpu.load(0x0000, tn01);
+     cpu.load(0x0800, tn02);
+     cpu.load(0x1000, tn03);
+     cpu.load(0x1800, tn04);
+     cpu.load(0x4000, tn05);
+     update(cpu);
+   }
+
+   function lr() { 
+     if (cpu.interval)
+       clearInterval(cpu.interval);
+
+     cpu = new Cpu(memoryUpdated, sound, interrupt);   
+     cpu.count = 0;
+     if($('#screen').length > 0) {
+       cpu.ctx = $('#screen')[0].getContext('2d');
+       cpu.video = createImageData(224, 256);
+     }
+     cpu.load(0x0000, lrescue1);
+     cpu.load(0x0800, lrescue2);
+     cpu.load(0x1000, lrescue3);
+     cpu.load(0x1800, lrescue4);
+     cpu.load(0x4000, lrescue5);
+     cpu.load(0x4800, lrescue6);
+     update(cpu);
+   }
+
+   function flags(cpu) {
+     return (cpu.f & ZERO ? "z" : ".") +
+            (cpu.f & SIGN ? "s" : ".") +
+            (cpu.f & PARITY ? "p" : ".") +
+            (cpu.f & INTERRUPT ? "i" : ".") +
+            (cpu.f & CARRY ? "c" : ".");
+   }   
+   function hex(n) {
+     return pad(n.toString(16), 4);
+   }
+   function update(cpu) {
+     $('#af').html(hex(cpu.af()));
+     $('#bc').html(hex(cpu.bc()));
+     $('#de').html(hex(cpu.de()));
+     $('#hl').html(hex(cpu.hl()));
+     $('#pc').html(hex(cpu.pc));
+     $('#sp').html(hex(cpu.sp));
+     $('#flags').html(flags(cpu));
+     $('#cycles').html(cpu.cycles);
+     $('#disassemble').html(cpu.disassemble(cpu.pc));
+     if (cpu.ctx)
+       cpu.ctx.putImageData(cpu.video, 0, 0);
+   }
+   function run1()
+   {
+     cpu.step();
+     update(cpu);
+   }
+   function runn()
+   {
+     var n = parseInt($('#n')[0].value);
+     var start = new Date();
+     for(var i=0; i<n; ++i) {
+       cpu.step();
+     }
+     var end = new Date();
+     update(cpu);
+     $('#time').html((end-start) + "ms");
+   }
+
+   function stopAnimate() {
+     if (cpu.interval)
+       clearInterval(cpu.interval);
+     delete cpu.interval;
+     update(cpu);
+   }
+   function animate() {
+     if (cpu.interval)
+       clearInterval(cpu.interval);
+    var cyclesSoFar = 0;
+     cpu.interval = setInterval(function() {
+       for(var i=0; i < (cpu.animate || 3000) ; ++i) {
+         cpu.step();
+       }
+       console.log(cpu.cycles - cyclesSoFar);
+       cyclesSoFar = cpu.cycles;
+     }, 10);
+   }
+   function fullscreen() {
+     var e = document.getElementById('screen');
+     if (e.requestFullScreen) {  
+       e.requestFullScreen();  
+     } else if (e.mozRequestFullScreen) {  
+       e.mozRequestFullScreen();  
+     } else if (e.webkitRequestFullScreen) {  
+       e.webkitRequestFullScreen();  
+     }  
+   }
+   function mobile() {
+     var e = document.getElementById('screen');
+     e.className = "fullscreen";
+   }
+
+ </script>
+ <button onclick='si();'>Space Invaders</button>
+ <button onclick='lr();'>Lunar Rescue</button>
+ <button onclick='bb();'>Balloon Bomber</button>
+ <a href="http://www.bluishcoder.co.nz/2008/09/javascript-space-invaders-emulator.html">About</a>
+ <br>
+ <button onclick='animate();'>Animate</button>
+ <button onclick='stopAnimate();'>Stop Animate</button>
+ <button onclick='run1();'>Run 1</button>
+ <button onclick='runn();'>Run n</button>
+ <input id="n" type="text" value="1000">
+ <button onclick='enableAudio()'>Enable Audio</button>
+ <button onclick='fullscreen()'>Fullscreen</button>
+ <button onclick='mobile()'>Mobile</button>
+ <p id="time"></p>
+ <table>
+   <tr><th>af<th>bc<th>de<th>hl<th>pc<th>sp<th>flags<th>cycles
+   <tr><td><div id="af"><td><div id="bc"><td><div id="de"><td><div id="hl"><td><div id="pc"><td><div id="sp"><td><div id="flags"><td><div id="cycles">
+ </table>
+ <pre id="disassemble">
+ </pre>
+ <table style="float:right" border='1'>
+    <tr><th>key<th>action</tr>
+    <tr><td>z<td>left</tr>
+    <tr><td>x<td>right</tr>
+    <tr><td>.<td>fire</tr>
+    <tr><td>c<td>insert coin</tr>
+    <tr><td>1<td>1 player</tr>
+ </table>
+ <canvas 
+   id="screen" 
+   width="224" 
+   height="256">
+ </canvas>
+ <p id="status">
+ <script type="text/javascript">
+   function plotData(video, x, y, value, bit) {
+       var bt = (value >> bit) & 1;
+       y = y-bit;
+       var r = 0;
+       var g = 0;
+       var b = 0;
+       if (bt) {
+         if (y >= 184 && y <= 238 && x >= 0 && x <= 223)
+           g = 255;
+         else if (y >= 240 && y <= 247 && x >= 16 && x <= 133)
+           g = 255;
+         else if (y >= (247-215) && y >= (247 - 184) && x >= 0 && x<=233) {
+           g = 255;
+           b = 255;
+           r = 255;
+         }
+         else {
+           r = 255;
+         } 
+       }
+       var index = y*(4*224)+x*4;
+       video[index] = r;
+       video[index+1] = g;
+       video[index+2] = b;
+       video[index+3] = 255;
+   }
+   function memoryUpdated(addr, value)
+   {
+     if (!this.video)
+       return;
+
+     if (addr >= 0x2400) {
+       // Update video memory
+       var base = addr - 0x2400;
+       var y = ~(((base & 0x1f) * 8) & 0xFF) & 0xFF;
+       var x = base >> 5;
+       for(var i=0; i<8; ++i) {
+         plotData(this.video.data, x, y, value, i);
+       }
+     }
+   }
+   function sound(id) {   
+     switch(id) {
+     case 2:       
+       audio.shot && audio.shot.play();
+       $('#status').html("bang!");
+       break;
+     case 3:
+       audio.shot && audio.basehit.play();
+       $('#status').html("boom!");
+       break;
+     case 4:
+       audio.shot && audio.invhit.play();
+       $('#status').html("kaboom!");
+       break;
+     case 11:
+       audio.shot && audio.walk1.play();
+//       $('#status').html("walk1");
+       break;
+     case 12:
+       audio.shot && audio.walk2.play();
+//       $('#status').html("walk2");
+       break;
+     case 13:
+       audio.shot && audio.walk3.play();
+//       $('#status').html("walk3");
+       break;
+     case 14:
+       audio.shot && audio.walk4.play();
+//       $('#status').html("walk4");
+       break;
+     case 15:
+       audio.shot && audio.ufohit.play();
+       $('#status').html("ufo blows up!");
+       break;
+     }
+   }
+   function interrupt(n) {
+     if (n == 0x10 && this.ctx)
+       this.ctx.putImageData(this.video, 0, 0);
+   }
+
+   var cpu = {};
+   si();
+   document.addEventListener("keydown", function(e) {
+     var evt = e || window.event;
+     if(evt.keyCode == 67)
+       cpu.port1 |= 1;
+     if(evt.keyCode == 49)
+       cpu.port1 |= 4;
+     if(evt.keyCode == 190)
+       cpu.port1 |= 0x10;
+     if(evt.keyCode == 90)
+       cpu.port1 |= 0x20;
+     if(evt.keyCode == 88)
+       cpu.port1 |= 0x40;
+     return false;
+   }, false);
+   document.addEventListener("keyup", function(e) {
+     var evt = e || window.event;
+     if(evt.keyCode == 67)
+       cpu.port1 &= 255-1;
+     if(evt.keyCode == 49)
+       cpu.port1 &= 255-4;
+     if(evt.keyCode == 190)
+       cpu.port1 &= 255-0x10;
+     if(evt.keyCode == 90)
+       cpu.port1 &= 255-0x20;
+     if(evt.keyCode == 88)
+       cpu.port1 &= 255-0x40;
+     return false;
+   }, false);
+
+   // from: http://stackoverflow.com/questions/442404/dynamically-retrieve-html-element-x-y-position-with-javascript
+   function getOffset( el ) {
+       var _x = 0;
+       var _y = 0;
+       while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {
+           _x += el.offsetLeft - el.scrollLeft;
+           _y += el.offsetTop - el.scrollTop;
+           el = el.parentNode;
+       }
+       return { top: _y, left: _x };
+   }
+
+   document.getElementById('screen').addEventListener("mousedown", function(e) {
+     var evt = e || window.event;
+     var offset = getOffset (document.getElementById('screen'));
+     var y = evt.clientY - offset.top;
+     var x = evt.clientX - offset.left;
+     if(y <= 100 && x <= 112)
+       cpu.port1 |= 1; // coin
+     if(y <= 100 && x > 112)
+       cpu.port1 |= 4;
+
+     if(y > 100 && x >= 74 && x <= 150)
+       cpu.port1 |= 0x10;
+
+     if(y > 100 && x < 74)
+       cpu.port1 |= 0x20;
+
+     if(y > 100 && x > 150)
+       cpu.port1 |= 0x40;
+     
+     return false;
+   }, false);
+   document.getElementById('screen').addEventListener("mouseup", function(e) {
+     var evt = e || window.event;
+     var offset = getOffset (document.getElementById('screen'));
+     var y = evt.clientY - offset.top;
+     var x = evt.clientX - offset.left;
+     if(y <= 100 && x <= 112)
+       cpu.port1 &= 255-1; // coin
+     if(y <= 100 && x > 112)
+       cpu.port1 &= 255-4; // 1 player
+
+     if(y > 100 && x >= 74 && x <= 150)
+       cpu.port1 &= 255-0x10;
+     if(y > 100 && x < 74)
+       cpu.port1 &= 255-0x20;
+     if(y > 100 && x > 150)
+       cpu.port1 &= 255-0x40;
+     return false;
+   }, false);
+
+ </script>
+<!-- Start of StatCounter Code -->
+<script type="text/javascript">
+var sc_project=1030053; 
+var sc_invisible=1; 
+var sc_partition=63; 
+var sc_click_stat=1; 
+var sc_security="4afd9f42"; 
+</script>
+
+<script type="text/javascript"
+src="http://www.statcounter.com/counter/counter.js"></script><noscript><div
+class="statcounter"><a title="wordpress stats plugin"
+href="http://www.statcounter.com/wordpress.com/"
+target="_blank"><img class="statcounter"
+src="http://c.statcounter.com/1030053/0/4afd9f42/1/"
+alt="wordpress stats plugin" ></a></div></noscript>
+<!-- End of StatCounter Code -->
+</body>
+</html>

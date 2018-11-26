@@ -48,6 +48,7 @@ We know how many clock cycles were interpreted
 ### Video rendering
 Video refreshing is set by specifying the fps.  For instance, 60fps = 16ms (every 960 ms)
 Use a timer to trigger a refresh.
+Or everytime memory is updated in the region of space that is video, refresh the screen.  Not very efficient
 
 ### Keystroke/Joystick
 Uses in/out port.
@@ -66,10 +67,12 @@ if (irq) ( execute instruction(interruptVector))
 CPU is at 2MHz so 2M cycles/sec
 Run the CPU in it's own thread
 ```
-  double sinceLast = now - lastTimer;
+while(1) {
+  double sinceLast = now - lastTimer;     // measure amount passed since last timer.
   int cycles_to_catch_up = 2 * sinceLast;
   int cycles = 0;
   while (cycles_to_catch_up > cycles) {}
+}
 
   // opt2
 
