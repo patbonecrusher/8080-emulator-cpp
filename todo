@@ -1,2 +1,3 @@
 ✔ Fix the stack pointer to start pop and push so that the last return actually stops the program. @done(18-11-15 14:19)
 ☐ Handle DAA carry instructions (not required for invaders)
+☐ Refactor instructions handling to use instruction from the document computer.pdf

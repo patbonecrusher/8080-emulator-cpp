@@ -43,6 +43,44 @@ There is a way to figure out the clock cycle of a computer and from that, adjust
 We know the CPU is 2MGZ, 2M clock cycles per second
 We know how many clock cycles were interpreted
 
+## Space Invader
+
+### Video rendering
+Video refreshing is set by specifying the fps.  For instance, 60fps = 16ms (every 960 ms)
+Use a timer to trigger a refresh.
+
+### Keystroke/Joystick
+Uses in/out port.
+Capture the keys up and down and tell the machine that they were pressed.
+The machine can then handle the db and d3 requests.
+
+### Sounds
+Driven by the d3 request (OUT PORT).  Based on some values, output the proper file.
+
+### Interrupt
+Need to understand the interrupt that the game fires and when.
+
+if (irq) ( execute instruction(interruptVector))
+
+### CPU throttling
+CPU is at 2MHz so 2M cycles/sec
+Run the CPU in it's own thread
+```
+  double sinceLast = now - lastTimer;
+  int cycles_to_catch_up = 2 * sinceLast;
+  int cycles = 0;
+  while (cycles_to_catch_up > cycles) {}
+
+  // opt2
+
+```
+
+
+### Color layer
+Look at the example from emulator 101
+
+## Some C++ sample
+
 ```
 #include <iostream>
 #include <string>
