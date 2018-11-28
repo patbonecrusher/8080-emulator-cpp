@@ -9,7 +9,7 @@ http://www.computerarcheology.com/Arcade/SpaceInvaders
 https://github.com/thibaultimbert/Intel8080
 https://github.com/kpmiller/emulator101
 https://github.com/ezet/i8080-emulator.git
-
+https://github.com/begoon/i8080-core
 
 g++ -std=gnu++17 dis8080.cpp
 
