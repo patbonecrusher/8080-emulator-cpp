@@ -1,0 +1,12 @@
+[submodule "ref/Intel8080"]
+	path = ref/Intel8080
+	url = https://github.com/thibaultimbert/Intel8080
+[submodule "ref-repo/emulator101"]
+	path = ref-repo/emulator101
+	url = https://github.com/kpmiller/emulator101
+[submodule "ref-repo/i8080-emulator"]
+	path = ref-repo/i8080-emulator
+	url = https://github.com/ezet/i8080-emulator.git
+[submodule "ref-repo/i8080-core"]
+	path = ref-repo/i8080-core
+	url = https://github.com/begoon/i8080-core
