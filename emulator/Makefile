@@ -2,9 +2,15 @@ CC        := g++
 LD        := g++
 CPPFLAGS  = -std=gnu++17
 CPPFLAGS += -DNATIVE
-LDFLAGS   = -L/usr/lib/x86_64-linux-gnu
-LDFLAGS  += -L/usr/local/Cellar/lzlib/1.10/lib
+#LDFLAGS   = -L/usr/lib/x86_64-linux-gnu
+#LDFLAGS  += -L/usr/local/Cellar/lzlib/1.10/lib
 LDFLAGS  += -L/usr/local/lib
+#LDFLAGS  += -L$(brew --prefix lzlib)/include
+#LDFLAGS  += -L$(brew --prefix lzlib)/lib
+
+# On mac:
+# brew install libzip
+# brew install lzlib
 
 MODULES   := utils .
 SRC_DIR   := $(addprefix ./,$(MODULES))

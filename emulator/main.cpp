@@ -93,7 +93,21 @@ int main (int argc, char*argv[]) {
 
 extern "C" unsigned char ___roms_cpudiag_bin[];
 extern "C" unsigned int ___roms_cpudiag_bin_len;
+
+extern "C" unsigned char invaders_e[];
+extern "C" unsigned int invaders_e_len;
+
+extern "C" unsigned char invaders_f[];
+extern "C" unsigned int invaders_f_len;
+
+extern "C" unsigned char invaders_g[];
+extern "C" unsigned int invaders_g_len;
+
+extern "C" unsigned char invaders_h[];
+extern "C" unsigned int invaders_h_len;
+
 using namespace emscripten;
+
 
 int main (int argc, char*argv[]) {
   printf("hi\n");
@@ -118,7 +132,88 @@ EMSCRIPTEN_BINDINGS(interface) {
         ;
 }
 
+struct IVideoDisplay {
+    virtual ~IVideoDisplay() {}
+    virtual void renderFrame(unsigned char *buffer) = 0;
+    // void convertFrame(unsigned char* buffer);
+};
+
+struct IVideoDisplayWrapper : public wrapper<IVideoDisplay> {
+    EMSCRIPTEN_WRAPPER(IVideoDisplayWrapper);
+    void renderFrame(unsigned char *buffer) {
+        return call<void>("renderFrame", val(typed_memory_view(2048, buffer)));
+        // return call<void>("renderFrame", buffer);
+    }
+};
+
+EMSCRIPTEN_BINDINGS(iVideoDisplay) {
+    class_<IVideoDisplay>("IVideoDisplay")
+        .function("renderFrame", &IVideoDisplay::renderFrame, pure_virtual(), allow_raw_pointers())
+        .allow_subclass<IVideoDisplayWrapper>("IVideoDisplayWrapper")
+        ;
+}
+
+
+
 Interface* iii;
+
+struct InterfaceB {
+    static void invoke(Interface* i, const std::string& str) {
+      i->invoke(str);
+    }
+};
+
+template 
+<
+	class video_interface
+>
+class Engine {
+  public:
+    Engine(Interface* i) : i(i) {}
+    ~Engine() { this->doShit("Dying"); }
+    void doShit(std::string const& str) { video_interface::invoke(i, str); }
+    void doShit2(std::string const& str) { i->invoke(str); }
+  Interface* i;
+};
+
+Engine<InterfaceB> *bar;
+
+class SpaceInvader {
+  public:
+    SpaceInvader(void) {}
+    SpaceInvader(IVideoDisplay* i) : i(i) {}
+    ~SpaceInvader() {std::cout << "OOOOOKILL" << std::endl;} // this->doShit("Dying"); }
+
+    void start() {
+      std::cout << "OOOOO" << std::endl;
+      if (i != NULL) i->renderFrame((unsigned char*)"hi");
+    }
+    void pause() {}
+    void resume() {}
+    void restart() {}
+
+    void run_loop() {}
+
+    void doShit(std::string const& str) { }//i->invoke(str); }
+  IVideoDisplay* i;
+};
+
+SpaceInvader *sinvader;
+SpaceInvader* makeMyClass(IVideoDisplay* video) {
+  return new SpaceInvader(video);
+}
+
+// Binding code
+EMSCRIPTEN_BINDINGS(my_class_example) {
+  class_<SpaceInvader>("SpaceInvader")
+    // .constructor<>()
+    .constructor(&makeMyClass, allow_raw_pointers())
+    .function("start", &SpaceInvader::start)
+    // .property("x", &MyClass::getX, &MyClass::setX)
+    // .class_function("getStringFromInstance", &MyClass::getStringFromInstance)
+    ;
+}
+
 
 extern "C" void EMSCRIPTEN_KEEPALIVE run_diag() {
   auto core = cpu();
@@ -136,7 +231,10 @@ extern "C" void EMSCRIPTEN_KEEPALIVE run_diag() {
   try {
     iii->invoke("titicaca");
     iii->invoke("titicooo");
-    core.run();
+    bar->doShit("boobaa");
+    bar->doShit2("boobaa2");
+
+    //core.run();
   } catch (system_error& err) {
     cout << "Systen was halted" << endl;
   } catch (std::exception& ex) {
@@ -176,10 +274,13 @@ EMSCRIPTEN_BINDINGS(my_value_example) {
 }
 
 
+
 void invokeInterface(Interface* i) {
   printf("here\n");
   i->invoke("poopoo");
   iii = i;
+  bar = new Engine<InterfaceB>(i);
+  bar->doShit("boo");
 }
 
 EMSCRIPTEN_BINDINGS(infokeinf) {

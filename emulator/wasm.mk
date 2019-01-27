@@ -32,6 +32,11 @@
 # clean:
 # 	rm -rf *.o *.so.* *.a *.la $(APP)
 
+SHELL := /bin/bash
+
+mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
+mkfile_dir := $(dir $(mkfile_path))
+
 CC        := em++
 LD        := em++
 CPPFLAGS  = -std=gnu++1z

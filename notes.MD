@@ -167,3 +167,22 @@ protected:
 typedef logger<file_writer> file_logger;
 typedef logger<network_writer> network_logger;
 ```
+
+### To use color instead of overlays
+
+```c
+if (bt) {
+         if (y >= 184 && y <= 238 && x >= 0 && x <= 223)
+           g = 255;
+         else if (y >= 240 && y <= 247 && x >= 16 && x <= 133)
+           g = 255;
+         else if (y >= (247-215) && y >= (247 - 184) && x >= 0 && x<=233) {
+           g = 255;
+           b = 255;
+           r = 255;
+         }
+         else {
+           r = 255;
+         }
+       }
+```

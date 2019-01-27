@@ -34,3 +34,5 @@ https://kripken.github.io/emscripten-site/docs/getting_started/downloads.html
 
 
 xxd -p 8080-emulator-cpp/roms/cpudiag.bin
+
+http://kripken.github.io/emscripten-site/docs/porting/connecting_cpp_and_javascript/embind.html

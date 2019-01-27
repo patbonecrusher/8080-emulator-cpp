@@ -41,7 +41,7 @@ _cpu_state::_cpu_state(uint8_t  *memory)
 }
 
 _cpu_state::~_cpu_state() {
-    cout << "here" << endl;
+    cout << "here calisse" << endl;
 }
 
 static int parity(int x, int size) {
