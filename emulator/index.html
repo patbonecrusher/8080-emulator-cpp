@@ -11,14 +11,43 @@
 
     <button id="diag" type="button">Click Me!</button>
     <br/>
-    <canvas id="screen" width="224" height="256" style="background-color:red" />
+    <canvas id="screen" width="224" height="256" style="background-color:blue" />
 
     <!-- Include the JavaScript glue code. -->
     <script>
+
+
+
+
       var videoObj=undefined;
+      var j = undefined;
       var Module = {
         onRuntimeInitialized: function() {
           console.log('loaded')
+
+          j = new Module.Joystick();
+
+          document.addEventListener('keydown', e => {
+            console.log("down ", e.code)
+            var left, right, space = false
+            if (`${e.code}` == "ArrowRight") { right = true }
+            if (`${e.code}` == "ArrowLeft" ) { left = true }
+            if (`${e.code}` == "ArrowDown" ) { console.log("Move Down") }
+            if (`${e.code}` == "ArrowUp"   ) { }
+            if (`${e.code}` == "Space"     ) { space = true }
+            j.down(left, right, space)
+          });
+
+          document.addEventListener('keyup', e => {
+            console.log("up: ", e.code)
+            var left, right, space = false
+            if (`${e.code}` == "ArrowRight") { right = true }
+            if (`${e.code}` == "ArrowLeft" ) { left = true }
+            if (`${e.code}` == "ArrowDown" ) { console.log("Move Down") }
+            if (`${e.code}` == "ArrowUp"   ) { }
+            if (`${e.code}` == "Space"     ) { space = true }
+            j.up(left, right, space)
+          });
 
           var x = {
             invoke: function(str) {
@@ -30,7 +59,25 @@
 
           var video = {
             renderFrame: function(buffer) {
-              console.log('rendering frame' + buffer);
+              console.log('aaa')
+              //console.log('rendering frame\n' + buffer);
+              const canvas = document.getElementById('screen');
+              const height = canvas.height;
+                const width = canvas.width;
+
+                const ctx = canvas.getContext(
+                '2d',
+                {
+                    alpha: false,
+                    antialias: false,
+                    depth: false
+                }
+                );
+
+                //const pointer = instance.exports._init(width, height);
+                const data = new Uint8ClampedArray(buffer);
+                const img = new ImageData(data, width, height);
+                ctx.putImageData(img, 0, 0);
             }
           }
           videoObj = Module.IVideoDisplay.implement(video);
@@ -51,15 +98,17 @@
         try {
           var person = Module.findPersonAtLocation([10.2, 156.5]);
           console.log('Found someone! Their name is ' + person.name + ' and they are ' + person.age + ' years old');
-          _run_diag();
 
           // var instance = new Module.SpaceInvader;
           // instance.start();
           // instance.delete();
 
-          var instance2 = new Module.SpaceInvader(videoObj);
+          var instance2 = new Module.SpaceInvader(videoObj, j);
           instance2.start();
           instance2.delete();
+          console.log('hi', Module.doLeakCheck())
+
+          //_run_diag();
 
         } catch (e) {
           console.log(e);

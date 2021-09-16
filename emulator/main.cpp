@@ -6,6 +6,8 @@
 #include "cpu.hpp"
 #include "program_factory.hpp"
 
+
+#define WASM_MAIN 1
 #ifndef WASM_MAIN
 extern void main_old (const char * fileName, int offset);
 
@@ -91,6 +93,7 @@ int main (int argc, char*argv[]) {
 #include <emscripten/emscripten.h>
 #include <emscripten/bind.h>
 
+
 extern "C" unsigned char ___roms_cpudiag_bin[];
 extern "C" unsigned int ___roms_cpudiag_bin_len;
 
@@ -112,6 +115,17 @@ using namespace emscripten;
 int main (int argc, char*argv[]) {
   printf("hi\n");
 }
+
+//#include <sanitizer/lsan_interface.h>
+
+void free_result() {
+//    free(result);
+}
+
+EMSCRIPTEN_BINDINGS(my_module) {
+  emscripten::function("free_result", &free_result);
+}
+
 
 struct Interface {
     virtual ~Interface() {}
@@ -141,7 +155,7 @@ struct IVideoDisplay {
 struct IVideoDisplayWrapper : public wrapper<IVideoDisplay> {
     EMSCRIPTEN_WRAPPER(IVideoDisplayWrapper);
     void renderFrame(unsigned char *buffer) {
-        return call<void>("renderFrame", val(typed_memory_view(2048, buffer)));
+        return call<void>("renderFrame", val(typed_memory_view(224*256*4, buffer)));
         // return call<void>("renderFrame", buffer);
     }
 };
@@ -152,7 +166,6 @@ EMSCRIPTEN_BINDINGS(iVideoDisplay) {
         .allow_subclass<IVideoDisplayWrapper>("IVideoDisplayWrapper")
         ;
 }
-
 
 
 Interface* iii;
@@ -178,15 +191,63 @@ class Engine {
 
 Engine<InterfaceB> *bar;
 
+class Joystick {
+  public:
+    Joystick(void) {}
+    ~Joystick() {std::cout << "OOKILL" << std::endl;} // this->doShit("Dying"); }
+
+    void down(bool left, bool right, bool fire) {
+      if (left) this->left = true;
+      if (right) this->right = true;
+      if (fire) this->fire = true;
+      std::cout << "DOWN " << this->left << this->right << this->fire << std::endl;
+    }
+
+    void up(bool left, bool right, bool fire) {
+      if (left) this->left = false;
+      if (right) this->right = false;
+      if (fire) this->fire = false;
+      std::cout << "UP " << this->left << this->right << this->fire << std::endl;
+    }
+
+    void getState(bool & left, bool & right, bool & fire) {
+      std::cout << "STATE " << this->left << this->right << this->fire << std::endl;
+    }
+
+    private:
+      bool left, right, fire;
+};
+
+Joystick* makeJoystick(void) {
+  return new Joystick();
+}
+
+EMSCRIPTEN_BINDINGS(foo) {
+  class_<Joystick>("Joystick")
+    // .constructor<>()
+    .constructor(&makeJoystick, allow_raw_pointers())
+    .function("down", &Joystick::down)
+    .function("up", &Joystick::up)
+    // .property("x", &MyClass::getX, &MyClass::setX)
+    // .class_function("getStringFromInstance", &MyClass::getStringFromInstance)
+    ;
+}
+
 class SpaceInvader {
   public:
     SpaceInvader(void) {}
-    SpaceInvader(IVideoDisplay* i) : i(i) {}
+    SpaceInvader(IVideoDisplay* i, Joystick* j) : i(i), j(j) {}
     ~SpaceInvader() {std::cout << "OOOOOKILL" << std::endl;} // this->doShit("Dying"); }
 
     void start() {
       std::cout << "OOOOO" << std::endl;
-      if (i != NULL) i->renderFrame((unsigned char*)"hi");
+      auto f = new unsigned char[224*256*4];
+      memset(f, 100, 224*256*4);
+      if (i != NULL) i->renderFrame(f);//(unsigned char*)"hiaa\0");
+      delete[](f);
+
+      bool left, right, fire;
+      this->j->getState(left, right, fire);
     }
     void pause() {}
     void resume() {}
@@ -196,11 +257,12 @@ class SpaceInvader {
 
     void doShit(std::string const& str) { }//i->invoke(str); }
   IVideoDisplay* i;
+  Joystick* j;
 };
 
-SpaceInvader *sinvader;
-SpaceInvader* makeMyClass(IVideoDisplay* video) {
-  return new SpaceInvader(video);
+//SpaceInvader *sinvader;
+SpaceInvader* makeMyClass(IVideoDisplay* video, Joystick *j) {
+  return new SpaceInvader(video, j);
 }
 
 // Binding code
@@ -213,7 +275,6 @@ EMSCRIPTEN_BINDINGS(my_class_example) {
     // .class_function("getStringFromInstance", &MyClass::getStringFromInstance)
     ;
 }
-
 
 extern "C" void EMSCRIPTEN_KEEPALIVE run_diag() {
   auto core = cpu();
@@ -234,7 +295,7 @@ extern "C" void EMSCRIPTEN_KEEPALIVE run_diag() {
     bar->doShit("boobaa");
     bar->doShit2("boobaa2");
 
-    //core.run();
+    core.run();
   } catch (system_error& err) {
     cout << "Systen was halted" << endl;
   } catch (std::exception& ex) {
@@ -271,6 +332,7 @@ EMSCRIPTEN_BINDINGS(my_value_example) {
         ;
 
     emscripten::function("findPersonAtLocation", &findPersonAtLocation);
+  emscripten::function("doLeakCheck", &__lsan_do_recoverable_leak_check);
 }
 
 
