@@ -1,5 +1,5 @@
 #include <iostream>
-#include "cxxopts.hpp"
+//#include "cxxopts.hpp"
 #include "finally.hpp"
 
 #include "cpu_state.hpp"
@@ -22,7 +22,7 @@ void main_new(std::string const& file_name) {
 
   loader_fn(core, file_name);
 
-  system("/bin/stty raw -echo"); 
+  system("/bin/stty raw -echo");
   try {
     char c = 'n';
     do {
@@ -176,7 +176,7 @@ struct InterfaceB {
     }
 };
 
-template 
+template
 <
 	class video_interface
 >
@@ -283,24 +283,24 @@ extern "C" void EMSCRIPTEN_KEEPALIVE run_diag() {
   memcpy(&(core.memory[0x100]), ___roms_cpudiag_bin, ___roms_cpudiag_bin_len);
   core.cpu_state.pc = 0x100;
 
-  //Skip DAA test    
-  core.memory[0x59c] = 0xc3; //JMP    
-  core.memory[0x59d] = 0xc2;    
-  core.memory[0x59e] = 0x05;    
+  //Skip DAA test
+  core.memory[0x59c] = 0xc3; //JMP
+  core.memory[0x59d] = 0xc2;
+  core.memory[0x59e] = 0x05;
 
 //  core.memory[0x06a1] = 0x76;
-  try {
+//   try {
     iii->invoke("titicaca");
     iii->invoke("titicooo");
     bar->doShit("boobaa");
     bar->doShit2("boobaa2");
 
     core.run();
-  } catch (system_error& err) {
-    cout << "Systen was halted" << endl;
-  } catch (std::exception& ex) {
-    cout << "Systen was halted 2" << endl;
-  }
+//   } catch (system_error& err) {
+//     cout << "Systen was halted" << endl;
+//   } catch (std::exception& ex) {
+//     cout << "Systen was halted 2" << endl;
+//   }
 }
 
 struct Point2f {
@@ -332,7 +332,7 @@ EMSCRIPTEN_BINDINGS(my_value_example) {
         ;
 
     emscripten::function("findPersonAtLocation", &findPersonAtLocation);
-  emscripten::function("doLeakCheck", &__lsan_do_recoverable_leak_check);
+  //emscripten::function("doLeakCheck", &__lsan_do_recoverable_leak_check);
 }
 
 

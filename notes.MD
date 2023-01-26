@@ -186,3 +186,16 @@ if (bt) {
          }
        }
 ```
+
+### clock control
+
+As jfk says, the most common way to do this is tie the cpu speed to the vertical refresh of the (emulated) video output.
+
+Pick a number of cycles to run per video frame. This will often be machine-specific but you can calculate it by something like :
+
+cycles = clock speed in Hz / required frames-per-second
+Then you also get to do a sleep until the video update is hit, at which point you start the next n cycles of CPU emulation.
+
+If you're emulating something in particular then you just need to look up the fps rate and processor speed to get this approximately right.
+
+EDIT: If you don't have any external timing requirements then it is normal for an emulator to just run as fast as it possibly can. Sometimes this is a desired effect and sometimes not :)

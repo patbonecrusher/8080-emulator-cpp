@@ -15,7 +15,7 @@ cpu::~cpu() {
 }
 
 void cpu::load_firmware_in_memory(uint8_t *mem_buffer, uint16_t address) {
-    
+
 }
 
 int cpu::run() {
@@ -26,7 +26,7 @@ int cpu::run() {
 }
 
 void cpu::next() {
-    uint8_t opcode = memory[cpu_state.pc];    
+    uint8_t opcode = memory[cpu_state.pc];
 
     this->instructions[opcode].dissassemble(&memory[cpu_state.pc+1], cpu_state.pc);
     this->instructions[opcode].execute(&memory[cpu_state.pc+1], cpu_state);
@@ -34,7 +34,7 @@ void cpu::next() {
 }
 
 void cpu::halt(uint8_t * opcode, cpu_state_t& state) {
-    throw std::system_error(EFAULT, std::generic_category());
+    //throw std::system_error(EFAULT, std::generic_category());
 }
 
 void unimpl(uint8_t * opcode, op_info_t& op_info, cpu_state_t& state) {
@@ -48,7 +48,7 @@ void cpu::load_instruction_set() {
     for (int i=0; i<255; ++i) {
         this->instructions[i] = instruction(i, "ERROR", 0, 1, unimpl);
     }
-    
+
     // +++++++ START: Misc/Control instructions
     ADD_INS(0x00, "NOP", 4);
     ADD_INS(0x10, "NOP", 4);

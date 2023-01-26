@@ -18,7 +18,7 @@
 # 	$(CC) $(CPPFLAGS) -c $^ -o $@
 
 # $(APP): $(OBJ)
-# 	$(CC) $(LDFLAGS) -o $@ $^ -llz -lzip 
+# 	$(CC) $(LDFLAGS) -o $@ $^ -llz -lzip
 
 # all: $(APP) $(OBJ)
 # 	@echo "hello"
@@ -41,13 +41,14 @@ CC        := em++
 LD        := em++
 CPPFLAGS  = -std=gnu++1z
 CPPFLAGS += -DWASM_MAIN
-CPPFLAGS += -g4
-CPPFLAGS += -fsanitize=address -s ALLOW_MEMORY_GROWTH=1
+CPPFLAGS += -gsource-map
+CPPFLAGS += -fno-exceptions
+# CPPFLAGS += -fsanitize=address -s ALLOW_MEMORY_GROWTH=1
 #LDFLAGS   = -L/usr/lib/x86_64-linux-gnu
 #LDFLAGS  += -L/usr/local/Cellar/lzlib/1.10/lib
 #LDFLAGS  += -L/usr/local/lib
-LDFLAGS  += -s WASM=1 --bind -s DISABLE_EXCEPTION_CATCHING=2 -s ASSERTIONS=2 -s EXTRA_EXPORTED_RUNTIME_METHODS="['cwrap', 'ccall']"
-LDFLAGS += -s LLD_REPORT_UNDEFINED 
+LDFLAGS  += -s WASM=1 --bind -s DISABLE_EXCEPTION_CATCHING=2 -s ASSERTIONS=2 -s DISABLE_EXCEPTION_CATCHING=0
+LDFLAGS += -s LLD_REPORT_UNDEFINED
 LDFLAGS += -fsanitize=address -s TOTAL_MEMORY=1073741824 -s ALLOW_MEMORY_GROWTH=1
 
 # LDFLAGS  += -s WASM=1 -O3 -s DISABLE_EXCEPTION_CATCHING=2 -s ASSERTIONS=2 -s EXTRA_EXPORTED_RUNTIME_METHODS="['cwrap', 'ccall']"
@@ -77,7 +78,7 @@ all: checkdirs build_wasm/emulator.js
 
 build_wasm/emulator.js: $(OBJ)
 	@cp index.html build_wasm/index.html
-	$(LD) $(LDFLAGS) $^ -o $@ #-llz -lzip 
+	$(LD) $(LDFLAGS) $^ -o $@ #-llz -lzip
 
 
 checkdirs: $(BUILD_DIR)

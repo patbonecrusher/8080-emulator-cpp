@@ -82,13 +82,13 @@
           }
           videoObj = Module.IVideoDisplay.implement(video);
           // Module.invokeInterface(videoObj)
-          
+
         }
       };
     </script>
 
-    <!-- This will load the WebAssembly module and run its main. --> 
-    <script src="build_wasm/emulator.js"></script>
+    <!-- This will load the WebAssembly module and run its main. -->
+    <script type="text/javascript" src="build_wasm/emulator.js"></script>
 
     <script>
       // When a HTML dice is clicked, it's value will change.
@@ -106,7 +106,7 @@
           var instance2 = new Module.SpaceInvader(videoObj, j);
           instance2.start();
           instance2.delete();
-          console.log('hi', Module.doLeakCheck())
+          //console.log('hi', Module.doLeakCheck())
 
           //_run_diag();
 
@@ -115,6 +115,6 @@
         }
       });
     </script>
-   
+
   </body>
-</html> 
+</html>
